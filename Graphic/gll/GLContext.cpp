@@ -1,33 +1,35 @@
 #include "GLContext.h"
+#include "Graphic/gll/GLDevice.h"
 #include "Storm/Debug.h"
 #include "Storm/Autorelease.h"
-#include "Graphic/gll/GLDevice.h"
+#include "opengl/wglext.h"
 
-HGLRC GLContext::s_MainContext;//NSOpenGLContext*
+
+WGLContext *GLContext::s_MainContext;
 Blizzard::Thread::TLSSlot GLContext::s_CurrentContext;
 Blizzard::Thread::TLSSlot GLContext::s_CurrentGLContext;
-CFDictionaryRef GLContext::s_DesktopMode;
+int GLContext::s_DesktopMode;
 
 // https://github.com/bkaradzic/bgfx/blob/932302d8f460e514b933deba8c0e575a00f0bcd6/src/glcontext_wgl.cpp
 // https://github.com/CrossVR/dolphin/blob/90500ed90ee4d0fa7937442f8273314d15d33799/Source/Core/Common/GL/GLInterface/WGL.cpp
 // https://github.com/quyse/inanity/blob/415cc7f45dde03722161cf6bd1e13f5986507699/graphics/GlContext.cpp#L59
-void *Sub2A1E0(void *ptr) {
-    HGLRC *ptrptr = new HGLRC; // NSOpenGLContext** NSOpenGLContext*
+void *NewHGLRC(void *ptr) {
+    HGLRC *ptrptr = new HGLRC;
     *ptrptr = nullptr;
     return ptrptr;
 }
 
-void Sub2A200(void *ptr) {
-    delete static_cast<HGLRC *>(ptr);//NSOpenGLContext**
+void DeleteHGLRC(void *ptr) {
+    delete static_cast<HGLRC *>(ptr);
 }
 
-void *Sub720A0(void *ptr) {
+void *NewGLContext(void *ptr) {
     GLContext **ptrptr = new GLContext *;
     *ptrptr = nullptr;
     return ptrptr;
 }
 
-void Sub720C0(void *ptr) {
+void DeleteGLContext(void *ptr) {
     delete static_cast<GLContext **>(ptr);
 }
 
@@ -35,44 +37,50 @@ GLContext::Context::~Context() {
     if (this->context) {
         glFlush();
 
-        this->context->clearDrawable();
+
+        // Unbind the current OpenGL rendering context
+        this->context->clearCurrentContext();
+
+        // Delete the OpenGL rendering context
+        this->context->destroy();
+        this->context = nullptr;
+
 
         if (GLContext::GetCurrentContext() == context) {
-            NSOpenGLContext->clearCurrentContext();
+            // NSOpenGLContext->clearCurrentContext();
             GLContext::SetCurrentContext(nullptr);
         }
-
-        this->context->release();
+        // this->context->release();
     }
-
-    this->pixelFormat->release();
+//
+//    this->pixelFormat->release();
 }
 
-HGLRC GLContext::GetNSOpenGLCurrentContext(void) {//NSOpenGLContext *
-    return NSOpenGLContext->currentContext;
+HGLRC GLContext::GetNSOpenGLCurrentContext() {
+    return wglGetCurrentContext();
 }
 
-HGLRC GLContext::GetCurrentContext(void) {//NSOpenGLContext *
-    return *static_cast<HGLRC *>(//NSOpenGLContext**
-            Blizzard::Thread::RegisterLocalStorage(&GLContext::s_CurrentContext, Sub2A1E0, 0, Sub2A200)
+WGLContext *GLContext::GetCurrentContext() {
+    return *static_cast<WGLContext **>(
+            Blizzard::Thread::RegisterLocalStorage(&GLContext::s_CurrentContext, NewHGLRC, 0, DeleteHGLRC)
     );
 }
 
-void GLContext::SetCurrentContext(HGLRC context) { //NSOpenGLContext *
-    *static_cast<HGLRC *>(//NSOpenGLContext**
-            Blizzard::Thread::RegisterLocalStorage(&GLContext::s_CurrentContext, Sub2A1E0, 0, Sub2A200)
+void GLContext::SetCurrentContext(WGLContext *context) {
+    *static_cast<WGLContext **>(
+            Blizzard::Thread::RegisterLocalStorage(&GLContext::s_CurrentContext, NewHGLRC, 0, DeleteHGLRC)
     ) = context;
 }
 
-GLContext *GLContext::GetCurrentGLContext(void) {
+GLContext *GLContext::GetCurrentGLContext() {
     return *static_cast<GLContext **>(
-            Blizzard::Thread::RegisterLocalStorage(&GLContext::s_CurrentGLContext, Sub720A0, 0, Sub720C0)
+            Blizzard::Thread::RegisterLocalStorage(&GLContext::s_CurrentGLContext, NewGLContext, 0, DeleteGLContext)
     );
 }
 
 void GLContext::SetCurrentGLContext(GLContext *context) {
     *static_cast<GLContext **>(
-            Blizzard::Thread::RegisterLocalStorage(&GLContext::s_CurrentGLContext, Sub720A0, 0, Sub720C0)
+            Blizzard::Thread::RegisterLocalStorage(&GLContext::s_CurrentGLContext, NewGLContext, 0, DeleteGLContext)
     ) = context;
 }
 
@@ -103,7 +111,7 @@ int32_t GLContext::GetBackingHeight() {
     }
 }
 
-int32_t GLContext::GetWidth(void) {
+int32_t GLContext::GetWidth() {
     if (this->m_Windowed) {
         return this->m_Window->GetWidth();
     } else {
@@ -111,7 +119,7 @@ int32_t GLContext::GetWidth(void) {
     }
 }
 
-int32_t GLContext::GetHeight(void) {
+int32_t GLContext::GetHeight() {
     if (this->m_Windowed) {
         return this->m_Window->GetHeight();
     } else {
@@ -119,17 +127,17 @@ int32_t GLContext::GetHeight(void) {
     }
 }
 
-bool GLContext::IsCurrentContext(void) {
+bool GLContext::IsCurrentContext() {
     return GLContext::GetCurrentGLContext() == this;
 }
 
 void GLContext::MakeCurrent(bool a2) {
     BLIZZARD_ASSERT(this->m_Context->context != nullptr);
 
-    if (a2) {
-        HGLRC v6 = GLContext::GetNSOpenGLCurrentContext();
-        GLContext::SetCurrentContext(v6);
-    }
+    //if (a2) {
+    //    HGLRC v6 = GLContext::GetNSOpenGLCurrentContext();
+    //    GLContext::SetCurrentContext(v6);
+    //}
 
     if (this->m_Context->context != GLContext::GetCurrentContext()) {
         int32_t mtglEnabled = 0;
@@ -144,8 +152,7 @@ void GLContext::MakeCurrent(bool a2) {
 
             glFlush();
         }
-
-        this->m_Context->context->makeCurrentContext();
+        wglMakeCurrent(this->m_Context->context->m_hdc, this->m_Context->context->m_hglrc);
 
         GLContext::SetCurrentContext(this->m_Context->context);
         GLContext::SetCurrentGLContext(this);
@@ -179,21 +186,20 @@ void GLContext::SetContextFormat(GLTextureFormat a2, uint32_t sampleCount) {
     } else {
         auto &context = this->m_Contexts[v61];
 
-        CGDirectDisplayID v6 = CGMainDisplayID();
+        int v6 = 0;// CGMainDisplayID();
 
-        NSOpenGLPixelFormatAttribute formatAttributes[] = {
-                NSOpenGLPFADoubleBuffer,
-                NSOpenGLPFANoRecovery,
-                NSOpenGLPFAAccelerated,
-                NSOpenGLPFADepthSize, 0,
-                NSOpenGLPFAStencilSize, 0,
-                NSOpenGLPFAColorSize, 32,
-                NSOpenGLPFAWindow,
-                NSOpenGLPFAFullScreen,
-                NSOpenGLPFAScreenMask, CGDisplayIDToOpenGLDisplayMask(v6),
+        int formatAttributes[] = {
+                WGL_DOUBLE_BUFFER_ARB,
+                WGL_NO_RESET_NOTIFICATION_ARB,
+                WGL_GENERIC_ACCELERATION_ARB,
+                WGL_DEPTH_BITS_ARB, 8,
+                WGL_STENCIL_BITS_ARB, 8,
+                WGL_COLOR_BITS_ARB, 32,
+                WGL_DRAW_TO_WINDOW_ARB,
+                WGL_ACCELERATION_ARB, WGL_FULL_ACCELERATION_ARB,
                 0, 0, 0, 0, 0
         };
-
+//
         switch (a2) {
             case GLTF_INVALID:
                 break;
@@ -228,22 +234,22 @@ void GLContext::SetContextFormat(GLTextureFormat a2, uint32_t sampleCount) {
             BLIZZARD_ASSERT(formatAttributes[16] == 0);
             BLIZZARD_ASSERT(formatAttributes[17] == 0);
 
-            formatAttributes[13] = NSOpenGLPFASampleBuffers;
+            formatAttributes[13] = WGL_SAMPLE_BUFFERS_ARB;
             formatAttributes[14] = 1;
-            formatAttributes[15] = NSOpenGLPFASamples;
+            formatAttributes[15] = WGL_SAMPLES_ARB;
             formatAttributes[16] = sampleCount;
         }
 
         context.sampleCount = sampleCount;
 
-        context.pixelFormat = NSOpenGLPixelFormat->alloc();
-        initWithAttributes:
-        formatAttributes;
+//        context.pixelFormat = NSOpenGLPixelFormat->alloc();
+//        initWithAttributes:
+//        formatAttributes;
+//
+//
+//        BLIZZARD_ASSERT(context.pixelFormat != nullptr);
 
-
-        BLIZZARD_ASSERT(context.pixelFormat != nullptr);
-
-        context.context = NSOpenGLContext->alloc();
+        context.context = new WGLContext(this->m_Window->GetNSView());
         initWithFormat:
         context.pixelFormat;
         shareContext:
@@ -254,15 +260,15 @@ void GLContext::SetContextFormat(GLTextureFormat a2, uint32_t sampleCount) {
 
         this->m_Context = &context;
 
-        auto contextObj = context.context->CGLContextObj;
-
-        int32_t vsyncEnabled = this->m_VSyncEnabled;
-        CGLSetParameter(contextObj, kCGLCPSwapInterval, &vsyncEnabled);
-
-        auto result = this->m_MTGLEnabled
-                      ? CGLEnable(contextObj, kCGLCEMPEngine)
-                      : CGLDisable(contextObj, kCGLCEMPEngine);
-        BLIZZARD_ASSERT(result == kCGLNoError);
+//        auto contextObj = context.context->CGLContextObj;
+//
+//        int32_t vsyncEnabled = this->m_VSyncEnabled;
+//        CGLSetParameter(contextObj, kCGLCPSwapInterval, &vsyncEnabled);
+//
+//        auto result = this->m_MTGLEnabled
+//                      ? CGLEnable(contextObj, kCGLCEMPEngine)
+//                      : CGLDisable(contextObj, kCGLCEMPEngine);
+//        BLIZZARD_ASSERT(result == kCGLNoError);
 
         if (this->m_Window) {
             this->m_Window->SetOpenGLContext(this);
@@ -270,7 +276,7 @@ void GLContext::SetContextFormat(GLTextureFormat a2, uint32_t sampleCount) {
     }
 
     if (this->m_Context->context != GLContext::GetCurrentContext()) {
-        this->MakeCurrent(0);
+        this->MakeCurrent(false);
     }
 }
 
@@ -297,7 +303,7 @@ void GLContext::SetWindow(GLAbstractWindow *a2, bool a3) {
         return;
     }
 
-    NSView *v5;
+    HWND v5;
 
     if (this->m_Window) {
         v5 = this->m_Window->GetNSView();
@@ -318,79 +324,89 @@ void GLContext::SetWindow(GLAbstractWindow *a2, bool a3) {
         this->m_Window->CreateView();
     }
 
-    float v15;
-    bool v16 = false;
-    CGDisplayFadeReservationToken v17 = 0;
+    //float v15;
+    //bool v16 = false;
+    //int v17 = 0;
 
-    if (v5 && GLDevice::GetRendererInfo().unk100 > 2639 && this->m_Window->CanEnterFullscreenMode()) {
-        if (!this->m_Windowed) {
-            if (!GLContext::s_DesktopMode) {
-                // TODO
-                // Blizzard::Debug::Assert(
-                //     "s_DesktopMode",
-                //     "/Users/Shared/BuildServer/wow2.old/work/WoW-code/branches/wow-patch-3_3_5-BNet/WoW/Source/Mac/../../../"
-                //     "Engine/Source/Gx/CGxDeviceGLL/GLLayer/GLContext.cpp",
-                //     215
-                // );
-            }
+    //if (v5 && GLDevice::GetRendererInfo().unk100 > 2639 && this->m_Window->CanEnterFullscreenMode()) {
+    //    if (!this->m_Windowed) {
+    //        if (!GLContext::s_DesktopMode) {
+    //            // TODO
+    //            // Blizzard::Debug::Assert(
+    //            //     "s_DesktopMode",
+    //            //     "/Users/Shared/BuildServer/wow2.old/work/WoW-code/branches/wow-patch-3_3_5-BNet/WoW/Source/Mac/../../../"
+    //            //     "Engine/Source/Gx/CGxDeviceGLL/GLLayer/GLContext.cpp",
+    //            //     215
+    //            // );
+    //        }
 
-            v15 = 1.25;
-            v16 = false;
-            CGDisplayFadeReservationToken v8 = 0;
+    //        v15 = 1.25;
+    //        v16 = false;
+    //        int v8 = 0;
 
-            CGError v7 = CGAcquireDisplayFadeReservation(2.25, &v17);
+    //        CGError v7 = CGAcquireDisplayFadeReservation(2.25, &v17);
 
-            if (!v7) {
-                v8 = v17;
-            }
+    //        if (!v7) {
+    //            v8 = v17;
+    //        }
 
-            v17 = v8;
+    //        v17 = v8;
 
-            if (v8) {
-                v16 = CGDisplayFade(v8, 0.25, 0, 1.0, 0, 0, 0, 1) == kCGErrorSuccess;
-            }
+    //        if (v8) {
+    //            v16 = CGDisplayFade(v8, 0.25, 0, 1.0, 0, 0, 0, 1) == kCGErrorSuccess;
+    //        }
 
-            CGDirectDisplayID v10 = CGMainDisplayID();
-            CGDisplaySwitchToMode(v10, GLContext::s_DesktopMode);
+    //        int v10 = CGMainDisplayID();
+    //        CGDisplaySwitchToMode(v10, GLContext::s_DesktopMode);
 
-            this->m_Window->ExitFullscreenMode();
+    //        this->m_Window->ExitFullscreenMode();
 
-            // TODO
-            // SetSystemUIMode(0, 0);
-        }
+    //        // TODO
+    //        // SetSystemUIMode(0, 0);
+    //    }
 
-        CGReleaseAllDisplays();
-    }
+    //    CGReleaseAllDisplays();
+    //}
 
-    if (a3) {
-        this->m_Window->Show();
-    }
+    //if (a3) {
+    //    this->m_Window->Show();
+    //}
 
-    this->m_Windowed = 1;
-    CGDisplayRestoreColorSyncSettings();
+    //this->m_Windowed = 1;
+    //CGDisplayRestoreColorSyncSettings();
 
-    if (v17) {
-        if (v16) {
-            float v6 = v15;
+    //if (v17) {
+    //    if (v16) {
+    //        float v6 = v15;
 
-            if (v15 > 1.0) {
-                usleep(1000);
-                v6 = v15 - 1.0;
-            }
+    //        if (v15 > 1.0) {
+    //            usleep(1000);
+    //            v6 = v15 - 1.0;
+    //        }
 
-            CGDisplayFade(v17, v6, 1.0, 0, 0, 0, 0, 0);
-        }
+    //        CGDisplayFade(v17, v6, 1.0, 0, 0, 0, 0, 0);
+    //    }
 
-        CGReleaseDisplayFadeReservation(v17);
-    }
+    //    CGReleaseDisplayFadeReservation(v17);
+    //}
 
     return;
 }
 
-void GLContext::Swap(void) {
+void GLContext::Swap() {
     this->m_Context->context->flushBuffer();
 }
 
-void GLContext::Update(void) {
-    this->m_Context->context->update();
+void GLContext::Update() {
+    // If the window size has changed, update the OpenGL viewport
+    RECT rect;
+    GetClientRect(m_Window->GetNSView(), &rect);  // Get new window size
+    int width = rect.right - rect.left;
+    int height = rect.bottom - rect.top;
+
+    // Ensure the OpenGL context is still current
+    this->m_Context->context->makeCurrentContext();
+
+    // Update the OpenGL viewport to the new window size
+    glViewport(0, 0, width, height);
 }

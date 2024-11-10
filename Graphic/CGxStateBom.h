@@ -18,15 +18,15 @@ public:
     int32_t filler;
 
     // Member functions
-    const CGxStateBom &operator=(float);
+    CGxStateBom &operator=(float);
 
-    const CGxStateBom &operator=(int32_t);
+    CGxStateBom &operator=(int32_t);
 
-    const CGxStateBom &operator=(uint32_t);
+    CGxStateBom &operator=(uint32_t);
 
-    const CGxStateBom &operator=(void *);
+    CGxStateBom &operator=(void *);
 
-    const CGxStateBom &operator=(C3Vector &);
+    CGxStateBom &operator=(C3Vector &);
 
     bool operator==(float);
 
@@ -34,7 +34,7 @@ public:
 
     bool operator==(uint32_t);
 
-    bool operator==(void *);
+    bool operator==(void *) const;
 
     bool operator==(C3Vector &);
 
@@ -44,7 +44,7 @@ public:
 
     bool operator!=(uint32_t);
 
-    bool operator!=(void *);
+    bool operator!=(void *) const;
 
     bool operator!=(C3Vector &);
 

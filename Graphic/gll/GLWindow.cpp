@@ -1,13 +1,10 @@
 #include "GLWindow.h"
 #include "GLContext.h"
-#include "GLLayerView.h"
-#include "Storm/Autorelease.h"
-#include "Storm/Debug.h"
 #include <cmath>
 
 
 GLWindowCallbacks DefaultCallbacks = {
-    // TODO
+        // TODO
 };
 
 bool GLWindow::CanEnterFullscreenMode() {
@@ -15,114 +12,131 @@ bool GLWindow::CanEnterFullscreenMode() {
 }
 
 void GLWindow::CreateView() {
-    System_Autorelease::ScopedPool autorelease;
+    // Create an OpenGL rendering context for the window if it doesn't exist
+    if (!m_Context) {
+        // Get the device context for the window
+        HDC hdc = GetDC(m_Window);
 
-    BLIZZARD_ASSERT(this->m_View == nullptr);
+        // Setup the pixel format for OpenGL rendering
+        PIXELFORMATDESCRIPTOR pfd;
+        memset(&pfd, 0, sizeof(pfd));
+        pfd.nSize = sizeof(pfd);
+        pfd.nVersion = 1;
+        pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
+        pfd.iPixelType = PFD_TYPE_RGBA;
+        pfd.cColorBits = 32;
+        pfd.cDepthBits = 24;
+        pfd.iLayerType = PFD_MAIN_PLANE;
 
-    GLLayerView* v1 = [this->m_ViewClass alloc];
-    NSView* v2 = [this->m_Window contentView];
+        // Choose the closest pixel format that matches the PFD
+        int pixelFormat = ChoosePixelFormat(hdc, &pfd);
+        SetPixelFormat(hdc, pixelFormat, &pfd);
 
-    NSRect v6 = v2.frame;
+        // Create an OpenGL rendering context
+        m_Context = wglCreateContext(hdc);
 
-    this->m_View = [v1 initWithFrame: v6 glWindow: this];
+        // Make the rendering context current
+        wglMakeCurrent(hdc, m_Context);
 
-    [this->m_View setAutoresizingMask: 18];
-
-    [[this->m_Window contentView] addSubview: this->m_View];
-    [this->m_Window makeFirstResponder: this->m_View];
-    [this->m_Window setDelegate: this->m_View];
-}
-
-CGRect GLWindow::GetBackingRect() {
-    NSRect viewFrame = [this->m_Window contentView].frame;
-    NSRect backingFrame = [this->m_Window convertRectToBacking:viewFrame];
-
-    return CGRectMake(
-        0.0f,
-        0.0f,
-        backingFrame.size.width,
-        backingFrame.size.height
-    );
-}
-
-NSView* GLWindow::GetNSView() {
-    return (NSView*)this->m_View;
-}
-
-CGRect GLWindow::GetRect() {
-    NSRect screenFrame = [[NSScreen screens] objectAtIndex: 0].frame;
-    NSRect viewFrame = [this->m_Window contentView].frame;
-    NSRect windowFrame = this->m_Window.frame;
-
-    return CGRectMake(
-        windowFrame.origin.x,
-        screenFrame.size.height - (viewFrame.size.height + windowFrame.origin.y),
-        viewFrame.size.width,
-        viewFrame.size.height
-    );
-}
-
-void GLWindow::ExitFullscreenMode() {
-    // TODO
-}
-
-void GLWindow::Init(const CGRect& a2, GLWindowCallbacks* a3) {
-    System_Autorelease::ScopedPool autorelease;
-
-    this->SetCallbacks(a3);
-
-    BLIZZARD_ASSERT(this->m_Window == nullptr);
-
-    NSScreen* primaryScreen = [[NSScreen screens] objectAtIndex:0];
-
-    NSRect frame = primaryScreen.frame;
-
-    NSRect contentRect = NSMakeRect(
-        a2.origin.x,
-        (frame.origin.y + frame.size.height) - (a2.origin.y + a2.size.height),
-        a2.size.width,
-        a2.size.height
-    );
-
-    NSWindow* window = [NSWindow alloc];
-
-    [window
-        initWithContentRect: contentRect
-        styleMask: 15
-        backing: NSBackingStoreBuffered
-        defer: NO];
-
-    this->m_Window = window;
-
-    [window
-        setAcceptsMouseMovedEvents: YES];
-
-    [window
-        setReleasedWhenClosed: NO];
-
-    [window
-        setBackgroundColor: [NSColor blackColor]];
-
-    BLIZZARD_ASSERT(this->m_Window != nullptr);
-
-    // TODO
-    // return 1;
-}
-
-void GLWindow::Resize(uint32_t width, uint32_t height) {
-    auto rect = this->GetRect();
-
-    if (std::floor(rect.size.width) != width || std::floor(rect.size.height) != height) {
-        auto size = CGSizeMake(
-            (static_cast<float>(width / 65536) * 65536.0f) + static_cast<uint16_t>(width),
-            (static_cast<float>(height / 65536) * 65536.0f) + static_cast<uint16_t>(height)
-        );
-
-        [this->m_Window setContentSize: size];
+        // Release the device context after setting up
+        ReleaseDC(m_Window, hdc);
     }
 }
 
-void GLWindow::SetCallbacks(GLWindowCallbacks* callbacks) {
+NTempest::CRect GLWindow::GetBackingRect() {
+    RECT rect;
+    GetClientRect(m_Window, &rect);
+    NTempest::CRect ret(rect.bottom, rect.left, rect.top, rect.right);
+    return ret;
+}
+
+HWND GLWindow::GetNSView() {
+    return m_Window;
+}
+
+NTempest::CRect GLWindow::GetRect() {
+    RECT rect;
+    GetWindowRect(m_Window, &rect);
+    NTempest::CRect ret(rect.bottom, rect.left, rect.top, rect.right);
+    return ret;
+}
+
+void GLWindow::EnterFullscreenMode() {
+// Check if already in fullscreen mode
+    if (m_FullscreenWindow) {
+        return;  // Already in fullscreen
+    }
+
+    // Get the current window position and size before going fullscreen
+    GetWindowRect(m_Window, &m_WindowedRect);
+
+    // Set the window to fullscreen style (borderless window)
+    SetWindowLongPtr(m_Window, GWL_STYLE, WS_POPUP | WS_VISIBLE);
+
+    // Get the screen dimensions
+    HMONITOR hMonitor = MonitorFromWindow(m_Window, MONITOR_DEFAULTTONEAREST);
+    MONITORINFO monitorInfo;
+    monitorInfo.cbSize = sizeof(MONITORINFO);
+    GetMonitorInfo(hMonitor, &monitorInfo);
+    RECT fullscreenRect = monitorInfo.rcMonitor;
+
+    // Set window position and size to cover the entire screen
+    SetWindowPos(m_Window, nullptr, fullscreenRect.left, fullscreenRect.top,
+                 fullscreenRect.right - fullscreenRect.left,
+                 fullscreenRect.bottom - fullscreenRect.top,
+                 SWP_NOZORDER | SWP_FRAMECHANGED);
+
+    // Mark the window as fullscreen
+    m_FullscreenWindow = this;  // Assign the current window to m_FullscreenWindow
+
+    // Hide the cursor in fullscreen if desired
+    ShowCursor(FALSE);
+}
+
+void GLWindow::ExitFullscreenMode() {
+    // Check if the window is already in fullscreen mode
+    if (m_FullscreenWindow) {
+        // Restore the window to its original style (from fullscreen mode)
+        SetWindowLongPtr(m_Window, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+
+        // Set the window to its previous size and position before fullscreen
+        SetWindowPos(m_Window, nullptr, m_WindowedRect.left, m_WindowedRect.top,
+                     m_WindowedRect.right - m_WindowedRect.left,
+                     m_WindowedRect.bottom - m_WindowedRect.top,
+                     SWP_NOZORDER | SWP_FRAMECHANGED);
+
+        // Show the window with its borders and title bar again
+        ShowWindow(m_Window, SW_NORMAL);
+
+        // Clean up the fullscreen window flag
+        m_FullscreenWindow = nullptr;
+    }
+}
+
+void GLWindow::Init(const NTempest::CRect &rect, GLWindowCallbacks *callbacks) {
+    m_Callbacks = callbacks;
+
+//    WNDCLASS wc = {0};
+//    wc.lpfnWndProc = GLWindow::WindowProc;
+//    wc.hInstance = GetModuleHandle(nullptr);
+//    wc.lpszClassName = "GLWindowClass";
+//
+//    RegisterClass(&wc);
+
+    m_Window = CreateWindowEx(0, "GLWindowClass", "OpenGL Window",
+                              WS_OVERLAPPEDWINDOW | WS_VISIBLE, rect.minX, rect.minY,
+                              rect.Width(), rect.Height(),
+                              nullptr, nullptr, GetModuleHandle(nullptr), this);
+}
+
+void GLWindow::Resize(uint32_t width, uint32_t height) {
+    SetWindowPos(m_Window, nullptr, 0, 0, width, height, SWP_NOMOVE | SWP_NOZORDER);
+    if (m_Callbacks && m_Callbacks->OnResized) {
+        m_Callbacks->OnResized(width, height, true);
+    }
+}
+
+void GLWindow::SetCallbacks(GLWindowCallbacks *callbacks) {
     if (callbacks) {
         this->m_Callbacks = callbacks;
         this->m_ActiveCallbacks = callbacks;
@@ -132,95 +146,48 @@ void GLWindow::SetCallbacks(GLWindowCallbacks* callbacks) {
     }
 }
 
-void GLWindow::SetOpenGLContext(GLContext* a2) {
-    BLIZZARD_ASSERT(this->m_View != nullptr);
-
-    System_Autorelease::ScopedPool autorelease;
-
-    if (a2) {
-        if ([a2->m_Context->context view]) {
-            [a2->m_Context->context clearDrawable];
-        }
-
-        if (this->m_Context) {
-            [this->m_Context->m_Context->context clearDrawable];
-        }
-
-        HGLRC currentContext = GLContext::GetNSOpenGLCurrentContext();
-
-        if (currentContext) {
-            [currentContext clearDrawable];
-        }
-
-        [a2->m_Context->context setView: this->m_View];
-
-        if (![a2->m_Context->context view]) {
-            puts("*** INVALID VIEW ***");
-        }
-
-        a2->Update();
-
-        this->m_Context = a2;
-    } else {
-        if (!this->m_Context) {
-            this->m_Context = a2;
-        } else {
-            [this->m_Context->m_Context->context clearDrawable];
-            this->m_Context = nullptr;
-        }
-    }
+void GLWindow::SetOpenGLContext(HGLRC context) {
+    m_Context = context;
+    wglMakeCurrent(GetDC(m_Window), m_Context);
 }
 
-void GLWindow::SetTitle(const char* title) {
-    // TODO
-    // sub_BD280(v5);
-
-    [this->m_Window
-        setTitle: [NSString stringWithUTF8String: title]];
-
-
-    // TODO
-    // sub_BD2C0(v5);
+void GLWindow::SetTitle(const char *title) {
+    SetWindowText(m_Window, title);
 }
 
-void GLWindow::SetViewClass(Class viewClass) {
-    if (![viewClass isSubclassOfClass: [GLLayerView class]]) {
-        // TODO
-        // sub_C2080(v3);
-    }
+void GLWindow::SetViewClass(const std::string &viewClass) {
+    // Store the view class in the class member variable
+    m_ViewClass = viewClass;
 
-    this->m_ViewClass = viewClass;
+    // Register the custom window class for future window creation
+//    if (!RegisterClassEx(&m_ViewClass)) {
+//        MessageBox(nullptr, "Failed to register window class!", "Error", MB_OK | MB_ICONERROR);
+//    }
 }
 
 void GLWindow::Show() {
-    if (this->m_FullscreenWindow) {
-        [this->m_FullscreenWindow
-            makeKeyAndOrderFront: 0];
-        [this->m_FullscreenWindow
-            makeFirstResponder: (NSView*)this->m_View];
-
-        this->m_Shown = true;
-    } else {
-        this->Sub70760();
-    }
+    ShowWindow(m_Window, SW_SHOW);
+    m_Shown = true;
 }
 
-void GLWindow::Sub70760() {
-    // TODO
-    // sub_BD280(v4);
-
-    [this->m_Window
-        makeKeyAndOrderFront: 0];
-
-    if (this->GetNSView()) {
-        NSView* view = this->GetNSView();
-
-        [this->m_Window
-            makeFirstResponder: view];
-    }
-
-    this->m_Shown = true;
-
-    // TODO
-    // sub_BD2C0(v4);
+int32_t GLWindow::GetWidth(void) {
+    return GetWidth();
 }
+
+int32_t GLWindow::GetHeight(void) {
+    return GetHeight();
+}
+
+void GLWindow::SetOpenGLContext(GLContext *context) {
+
+}
+
+int32_t GLWindow::GetBackingWidth() {
+    return GLAbstractWindow::GetBackingWidth();
+}
+
+int32_t GLWindow::GetBackingHeight() {
+    return GLAbstractWindow::GetBackingHeight();
+}
+
+

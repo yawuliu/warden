@@ -22,9 +22,9 @@ public:
     static CGxPool *s_indexPool;
 
     // Static functions
-    static void Initialize(void);
+    static void Initialize();
 
-    static void InitializeIndexBuff(void);
+    static void InitializeIndexBuff();
 
     CGxVertexPCT *UnlockVertexPtrAndRender(CGxBuf *&, int32_t);
 
@@ -33,7 +33,7 @@ public:
     STORM_EXPLICIT_LIST(CGxString, m_batchedStringLink) m_strings;
 
     // Member functions
-    void RenderBatch(void);
+    void RenderBatch();
 };
 
 class CGxStringBatch : public TSLinkedNode<CGxStringBatch> {
@@ -47,7 +47,7 @@ public:
 
     void AddString(CGxString *);
 
-    void RenderBatch(void);
+    void RenderBatch();
 };
 
 

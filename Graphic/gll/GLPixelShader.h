@@ -6,7 +6,7 @@
 class GLPixelShader : public GLShader {
 public:
     // Static functions
-    static GLPixelShader *Create(void);
+    static GLPixelShader *Create();
 };
 
 

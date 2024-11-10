@@ -48,7 +48,7 @@ public:
 
     virtual void CapsWindowSizeInScreenCoords(CRect &dst);
 
-    virtual void ScenePresent(void);
+    virtual void ScenePresent();
 
     virtual void SceneClear(uint32_t, CImVector);
 
@@ -72,7 +72,7 @@ public:
 
     virtual void ShaderCreate(CGxShader *[], EGxShTarget, const char *, const char *, int32_t);
 
-    virtual int32_t StereoEnabled(void);
+    virtual int32_t StereoEnabled();
 
     // Member functions
     CGxDeviceGLL();
@@ -89,7 +89,7 @@ public:
 
     void IShaderBindVertex(CGxShader *);
 
-    void IShaderConstantsFlush(void);
+    void IShaderConstantsFlush();
 
     void IShaderCreatePixel(CGxShader *);
 
@@ -97,21 +97,21 @@ public:
 
     void IStateSetGLLDefaults();
 
-    void IStateSync(void);
+    void IStateSync();
 
-    void IStateSyncEnables(void);
+    void IStateSyncEnables();
 
-    void IStateSyncIndexPtr(void);
+    void IStateSyncIndexPtr();
 
-    void IStateSyncLights(void);
+    void IStateSyncLights();
 
-    void IStateSyncMaterial(void);
+    void IStateSyncMaterial();
 
-    void IStateSyncScissorRect(void);
+    void IStateSyncScissorRect();
 
-    void IStateSyncVertexPtrs(void);
+    void IStateSyncVertexPtrs();
 
-    void IStateSyncXforms(void);
+    void IStateSyncXforms();
 
     void ITexCreate(CGxTex *);
 
@@ -123,7 +123,7 @@ public:
 
     void IXformSetView(const C44Matrix &);
 
-    void IXformSetViewport(void);
+    void IXformSetViewport();
 
     void PatchPixelShader(CGxShader *);
 

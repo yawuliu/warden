@@ -141,10 +141,10 @@ void CGxDeviceGLL::CapsWindowSizeInScreenCoords(CRect &dst) {
         auto windowRect = this->DeviceCurWindow();
         auto deviceRect = this->m_glWindow.GetRect();
 
-        dst.minX = windowRect.minX + deviceRect.origin.x;
-        dst.maxX = windowRect.maxX + deviceRect.origin.x;
-        dst.minY = windowRect.minY + deviceRect.origin.y;
-        dst.maxY = windowRect.maxY + deviceRect.origin.y;
+        dst.minX = windowRect.minX + deviceRect.minX;
+        dst.maxX = windowRect.maxX + deviceRect.minX;
+        dst.minY = windowRect.minY + deviceRect.minY;
+        dst.maxY = windowRect.maxY + deviceRect.minY;
     } else {
         dst = this->DeviceCurWindow();
     }
@@ -153,7 +153,7 @@ void CGxDeviceGLL::CapsWindowSizeInScreenCoords(CRect &dst) {
 int32_t
 CGxDeviceGLL::DeviceCreate(int32_t (*windowProc)(void *window, uint32_t message, uintptr_t wparam, intptr_t lparam),
                            const CGxFormat &format) {
-    CGRect rect;
+    NTempest::CRect rect;
     Rect *bounds;
     Rect *zoomedBounds = GetSavedZoomedWindowBounds();
 
@@ -171,10 +171,10 @@ CGxDeviceGLL::DeviceCreate(int32_t (*windowProc)(void *window, uint32_t message,
             bounds->bottom - bounds->top > 599
             && bounds->right - bounds->left > 799
             ) {
-        rect.origin.x = bounds->left;
-        rect.origin.y = bounds->top;
-        rect.size.width = bounds->right - bounds->left;
-        rect.size.height = bounds->bottom - bounds->top;
+        rect.minX = bounds->left;
+        rect.maxY = bounds->top;
+        rect.maxX = rect.minX + (bounds->right - bounds->left);
+        rect.minY = rect.maxY - (bounds->bottom - bounds->top);
     } else {
         Rect newBounds = {
                 0,
@@ -186,10 +186,10 @@ CGxDeviceGLL::DeviceCreate(int32_t (*windowProc)(void *window, uint32_t message,
 
         SetSavedWindowBounds(newBounds);
 
-        rect.origin.x = newBounds.left;
-        rect.origin.y = newBounds.top;
-        rect.size.width = newBounds.right;
-        rect.size.height = newBounds.bottom;
+        rect.minX = newBounds.left;
+        rect.maxY = newBounds.top;
+        rect.maxX = newBounds.right;
+        rect.minY = newBounds.bottom;
     }
 
     this->m_glWindow.SetViewClass(GetEngineViewClass());

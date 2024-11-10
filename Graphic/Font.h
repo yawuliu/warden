@@ -57,11 +57,11 @@ float GetCharacterWidth(const char *, uint32_t, uint32_t, CGxFont *, float);
 
 float GetIndentNormWidth();
 
-float GetIndentPixelWidth(void);
+float GetIndentPixelWidth();
 
-uint32_t GetScreenPixelHeight(void);
+uint32_t GetScreenPixelHeight();
 
-uint32_t GetScreenPixelWidth(void);
+uint32_t GetScreenPixelWidth();
 
 QUOTEDCODE GxuDetermineQuotedCode(const char *, int32_t &, CImVector *, uint32_t, uint32_t &);
 
@@ -100,7 +100,7 @@ void GxuFontGetTextExtent(CGxFont *, const char *, uint32_t, float, float *, flo
 
 float GxuFontGetWrappedTextHeight(CGxFont *, const char *, float, float, const C2Vector &, float, float, uint32_t);
 
-void GxuFontInitialize(void);
+void GxuFontInitialize();
 
 void GxuFontRenderBatch(CGxStringBatch *);
 
@@ -110,7 +110,7 @@ void GxuFontSetStringPosition(CGxString *string, const C3Vector &position);
 
 void GxuFontUpdate();
 
-void GxuFontWindowSizeChanged(void);
+void GxuFontWindowSizeChanged();
 
 int32_t IGxuFontGlyphRenderGlyph(FT_Face, uint32_t, uint32_t, uint32_t, GLYPHBITMAPDATA *, int32_t, uint32_t);
 

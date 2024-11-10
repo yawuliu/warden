@@ -3,7 +3,6 @@
 #include "Coordinate.h"
 #include "Draw.h"
 #include "Font.h"
-#include "Gx.h"
 #include "Transform.h"
 #include "Common/TSExplicitList.h"
 #include "Storm/Filesystem.h"

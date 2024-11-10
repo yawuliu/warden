@@ -7,9 +7,9 @@ class CGxShader;
 
 class CGxTex;
 
-void GxRsPop(void);
+void GxRsPop();
 
-void GxRsPush(void);
+void GxRsPush();
 
 void GxRsSet(EGxRenderState, int32_t);
 
@@ -17,6 +17,6 @@ void GxRsSet(EGxRenderState, CGxShader *);
 
 void GxRsSet(EGxRenderState, CGxTex *);
 
-void GxRsSetAlphaRef(void);
+void GxRsSetAlphaRef();
 
 

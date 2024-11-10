@@ -6,7 +6,7 @@
 class GLVertexShader : public GLShader {
 public:
     // Static functions
-    static GLVertexShader *Create(void);
+    static GLVertexShader *Create();
 };
 
 

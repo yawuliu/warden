@@ -34,15 +34,15 @@ public:
 
     ~GLWorker();
 
-    void Lock(void);
+    void Lock();
 
     void Send(GLCommand *);
 
-    void Signal(void);
+    void Signal();
 
-    void Unlock(void);
+    void Unlock();
 
-    void WaitOnGLObjects(void);
+    void WaitOnGLObjects();
 };
 
 

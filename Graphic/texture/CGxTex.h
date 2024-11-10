@@ -73,9 +73,9 @@ public:
            void (*)(EGxTexCommand, uint32_t, uint32_t, uint32_t, uint32_t, void *, uint32_t &, const void *&),
            const char *);
 
-    float GetHeight(void);
+    float GetHeight();
 
-    float GetWidth(void);
+    float GetWidth();
 };
 
 

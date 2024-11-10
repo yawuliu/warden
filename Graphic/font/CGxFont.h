@@ -49,9 +49,9 @@ public:
     GLYPHBITMAPDATA bitmapData;
 
     // Member functions
-    uint32_t GapToNextTexture(void);
+    uint32_t GapToNextTexture();
 
-    uint32_t GapToPreviousTexture(void);
+    uint32_t GapToPreviousTexture();
 
     void GenerateTextureCoords(uint32_t, uint32_t);
 };
@@ -120,7 +120,7 @@ public:
 
     void PasteGlyphOutlinedMonochrome(const GLYPHBITMAPDATA &, uint16_t *);
 
-    void UpdateDirty(void);
+    void UpdateDirty();
 
     void WriteGlyphToTexture(CHARCODEDESC *);
 };
@@ -147,9 +147,9 @@ public:
 
     int32_t CheckStringGlyphs(const char *);
 
-    void Clear(void);
+    void Clear();
 
-    void ClearGlyphs(void);
+    void ClearGlyphs();
 
     float ComputeStep(uint32_t, uint32_t);
 
@@ -161,7 +161,7 @@ public:
 
     const char *GetName(void) const;
 
-    uint32_t GetPixelSize(void);
+    uint32_t GetPixelSize();
 
     int32_t Initialize(const char *, uint32_t, float);
 
@@ -169,7 +169,7 @@ public:
 
     void RegisterEvictNotice(uint32_t);
 
-    int32_t UpdateDimensions(void);
+    int32_t UpdateDimensions();
 };
 
 

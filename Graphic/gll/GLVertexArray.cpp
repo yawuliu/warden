@@ -1,10 +1,6 @@
 #include "GLVertexArray.h"
 #include "GLDevice.h"
 
-//#include "opengl/glext.h"
-//#include "opengl/glxext.h"
-//#include "opengl/glcorearb.h"
-#include "GL/glew.h"
 #include "Storm/Debug.h"
 
 bool GLVertexArray::s_VertexArrayEnable = false;

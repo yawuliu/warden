@@ -59,7 +59,7 @@ public:
 
     static void SetTexMtx_SphereMap(uint32_t a1);
 
-    static void UpdateProjMatrix(void);
+    static void UpdateProjMatrix();
 
     // Member variables
     CGxShader *m_vertexShaders[90];
@@ -68,7 +68,7 @@ public:
     // Member functions
     void InitEffect(const char *vsName, const char *psName);
 
-    void SetCurrent(void);
+    void SetCurrent();
 };
 
 

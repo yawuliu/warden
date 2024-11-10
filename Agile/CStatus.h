@@ -24,4 +24,4 @@ public:
     void *m_logFile = nullptr;
 };
 
-CStatus &GetGlobalStatusObj(void);
+CStatus &GetGlobalStatusObj();

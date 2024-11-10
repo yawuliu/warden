@@ -1,7 +1,6 @@
 #include "Buffer.h"
 #include "Device.h"
 #include "Gx.h"
-#include "CGxBatch.h"
 #include "Storm/Debug.h"
 
 

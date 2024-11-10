@@ -36,7 +36,7 @@ public:
 
     GLMipmap *GetAttachment(GLEnum);
 
-    int32_t GetSampleCount(void);
+    int32_t GetSampleCount();
 
     bool IsValid();
 };

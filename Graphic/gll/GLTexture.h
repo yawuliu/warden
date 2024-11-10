@@ -66,24 +66,24 @@ public:
 
     void FreeTexture();
 
-    std::vector<Binding> &GetBindings(void); // invented name
-    GLTextureFormat GetFormat(void);
+    std::vector<Binding> &GetBindings(); // invented name
+    GLTextureFormat GetFormat();
 
-    TextureFormatInfo &GetFormatInfo(void);
+    TextureFormatInfo &GetFormatInfo();
 
     GLMipmap *GetMipmap(uint32_t, GLEnum);
 
-    bool IsRenderTarget(void);
+    bool IsRenderTarget();
 
-    bool IsSystemBuffer(void);
+    bool IsSystemBuffer();
 
-    bool IsValid(void);
+    bool IsValid();
 
     void *Map(uint32_t, const GLRect *, uint32_t &, GLEnum);
 
-    void RecreateGLTexture(void);
+    void RecreateGLTexture();
 
-    void ResizeMipmaps(void);
+    void ResizeMipmaps();
 
     void SetAddressModeR(GLEnum);
 
@@ -101,7 +101,7 @@ public:
 
     void SetMinFilterMode(GLEnum);
 
-    void SetupTexture(void);
+    void SetupTexture();
 
     void Unbind(GLDevice *, uint32_t); // invented name
     void Unmap(uint32_t level, GLEnum face);

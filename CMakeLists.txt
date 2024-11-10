@@ -43,7 +43,10 @@ file(GLOB_RECURSE dir_src
 find_package(OpenGL REQUIRED)
 link_directories(${CMAKE_SOURCE_DIR}/build/Debug/)
 #link_directories(${CMAKE_SOURCE_DIR}build/externel/freetype-2.0.9/Debug/)
-add_executable(warden main.cpp ${dir_src})
+add_executable(warden main.cpp ${dir_src}
+        Graphic/gll/GLLayerView.cpp
+        Graphic/gll/WGLContext.cpp
+        Graphic/gll/WGLContext.h)
 
 target_include_directories(warden PRIVATE "/")
 target_include_directories(warden PRIVATE "externel/freetype-2.0.9/include")

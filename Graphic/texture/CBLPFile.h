@@ -59,7 +59,7 @@ public:
     char *m_lockDecompMem;
 
     // Member functions
-    void Close(void);
+    void Close();
 
     int32_t Lock2(const char *, PIXEL_FORMAT, uint32_t, unsigned char *, uint32_t &);
 

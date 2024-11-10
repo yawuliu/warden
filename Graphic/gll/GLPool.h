@@ -5,28 +5,31 @@
 
 template<class T>
 class GLPool {
-    public:
-        // Static variables
-        static GLPool<T>* m_pool;
+public:
+    // Static variables
+    static GLPool<T> *m_pool;
 
-        // Static functions
-        static GLPool<T>* Get(void);
-        static void Init(void);
+    // Static functions
+    static GLPool<T> *Get();
 
-        // Member variables
-        std::atomic<uint32_t> m_NextName;
+    static void Init();
 
-        // Member functions
-        uint32_t GetNextName(void);
-        T* GetNextObject(void);
-        void SetNextName(uint32_t);
+    // Member variables
+    std::atomic<uint32_t> m_NextName;
+
+    // Member functions
+    uint32_t GetNextName();
+
+    T *GetNextObject();
+
+    void SetNextName(uint32_t);
 };
 
 template<class T>
-GLPool<T>* GLPool<T>::m_pool;
+GLPool<T> *GLPool<T>::m_pool;
 
 template<class T>
-GLPool<T>* GLPool<T>::Get() {
+GLPool<T> *GLPool<T>::Get() {
     return GLPool<T>::m_pool;
 }
 
@@ -41,7 +44,7 @@ uint32_t GLPool<T>::GetNextName() {
 }
 
 template<class T>
-T* GLPool<T>::GetNextObject() {
+T *GLPool<T>::GetNextObject() {
     // TODO
     // - pop off of GLObjectPool
 

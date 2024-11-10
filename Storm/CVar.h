@@ -41,7 +41,7 @@ public:
 
     int32_t GetInt();
 
-    const char *GetString(void);
+    const char *GetString();
 
     void InternalSet(const char *, bool, bool, bool, bool);
 

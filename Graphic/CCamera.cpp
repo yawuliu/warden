@@ -1,5 +1,4 @@
 #include "CCamera.h"
-#include "Shader.h"
 #include "Transform.h"
 #include "Graphic/shader/CShaderEffect.h"
 #include <cmath>

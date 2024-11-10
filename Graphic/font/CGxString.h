@@ -26,7 +26,7 @@ struct VERT {
 class TEXTLINETEXTURE {
 public:
     // Static functions
-    static TEXTLINETEXTURE *NewTextLineTexture(void);
+    static TEXTLINETEXTURE *NewTextLineTexture();
 
     static void Recycle(TEXTLINETEXTURE *ptr);
 
@@ -80,11 +80,11 @@ public:
 
     uint32_t CalculateVertsNeeded(int32_t);
 
-    bool CheckGeometry(void);
+    bool CheckGeometry();
 
-    void ClearInstanceData(void);
+    void ClearInstanceData();
 
-    void CreateGeometry(void);
+    void CreateGeometry();
 
     int32_t
     Initialize(float, const C3Vector &, float, float, CGxFont *, const char *, EGxFontVJusts, EGxFontHJusts, float,
@@ -92,7 +92,7 @@ public:
 
     void InitializeTextLine(const char *, uint32_t, CImVector &, const C3Vector &, uint32_t *, EMBEDDEDPARSEINFO &);
 
-    void InitializeViewTranslation(void);
+    void InitializeViewTranslation();
 
     void Recycle();
 

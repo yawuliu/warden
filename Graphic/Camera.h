@@ -10,7 +10,7 @@ using namespace NTempest;
 typedef HDATAMGR HCAMERA;
 
 
-HCAMERA CameraCreate(void);
+HCAMERA CameraCreate();
 
 void CameraSetupScreenProjection(const CRect &, const C2Vector &, float, int32_t);
 

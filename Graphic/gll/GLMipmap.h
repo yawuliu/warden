@@ -44,21 +44,21 @@ public:
 
     void DetachAll();
 
-    int32_t GetDepthBits(void);
+    int32_t GetDepthBits();
 
-    GLTextureFormat GetFormat(void);
+    GLTextureFormat GetFormat();
 
-    TextureFormatInfo &GetFormatInfo(void);
+    TextureFormatInfo &GetFormatInfo();
 
-    uint16_t GetHeight(void);
+    uint16_t GetHeight();
 
-    int32_t GetPitch(void);
+    int32_t GetPitch();
 
     GLTexture *GetTexture();
 
-    uint32_t GetTextureID(void);
+    uint32_t GetTextureID();
 
-    uint16_t GetWidth(void);
+    uint16_t GetWidth();
 
     void *Map(GLEnum, const GLBox *);
 
@@ -76,7 +76,7 @@ public:
 
     void TexSubImage(const GLBox &, int32_t, const void *);
 
-    void Unmap(void);
+    void Unmap();
 
     void Unmap(MapParams *);
 };

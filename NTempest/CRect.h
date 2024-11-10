@@ -20,6 +20,10 @@ namespace NTempest {
 
         bool Sub4826D0() const;
 
+        const float &Width() const;
+
+        const float &Height() const;
+        
     public:
         float minY;
         float minX;

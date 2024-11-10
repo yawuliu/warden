@@ -20,7 +20,7 @@ public:
 
     void GrowToFit(uint32_t index, int32_t zero);
 
-    T *New(void);
+    T *New();
 
     void Reserve(uint32_t count, int32_t round);
 

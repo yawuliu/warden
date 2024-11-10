@@ -6,7 +6,7 @@
 #include "TSList.h"
 #include "offset_of.h"
 
-#define STORM_EXPLICIT_LIST(T, link) TSExplicitList<T, STRUCT_OFFSET(T, link)>
+#define STORM_EXPLICIT_LIST(T, link) TSExplicitList<T, offsetof(T, link)>
 
 template<class T, size_t offset>
 class TSExplicitList : public TSList<T, TSGetExplicitLink<T>> {

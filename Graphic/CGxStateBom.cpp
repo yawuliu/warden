@@ -3,31 +3,31 @@
 
 using namespace NTempest;
 
-const CGxStateBom &CGxStateBom::operator=(int32_t value) {
+CGxStateBom &CGxStateBom::operator=(int32_t value) {
     this->m_data.i[0] = value;
 
     return *this;
 }
 
-const CGxStateBom &CGxStateBom::operator=(uint32_t value) {
+CGxStateBom &CGxStateBom::operator=(uint32_t value) {
     this->m_data.u[0] = value;
 
     return *this;
 }
 
-const CGxStateBom &CGxStateBom::operator=(float value) {
+CGxStateBom &CGxStateBom::operator=(float value) {
     this->m_data.f[0] = value;
 
     return *this;
 }
 
-const CGxStateBom &CGxStateBom::operator=(void *value) {
+CGxStateBom &CGxStateBom::operator=(void *value) {
     this->m_data.p = value;
 
     return *this;
 }
 
-const CGxStateBom &CGxStateBom::operator=(C3Vector &value) {
+CGxStateBom &CGxStateBom::operator=(C3Vector &value) {
     this->m_data.f[0] = value.x;
     this->m_data.f[1] = value.y;
     this->m_data.f[2] = value.z;
@@ -47,7 +47,7 @@ bool CGxStateBom::operator==(uint32_t value) {
     return this->m_data.u[0] == value;
 }
 
-bool CGxStateBom::operator==(void *value) {
+bool CGxStateBom::operator==(void *value) const {
     return this->m_data.p == value;
 }
 
@@ -69,7 +69,7 @@ bool CGxStateBom::operator!=(uint32_t value) {
     return !(*this == value);
 }
 
-bool CGxStateBom::operator!=(void *value) {
+bool CGxStateBom::operator!=(void *value) const {
     return !(*this == value);
 }
 
@@ -87,7 +87,7 @@ bool CGxStateBom::operator!=(CGxStateBom &value) {
 }
 
 CGxStateBom::operator CImVector() const {
-    CImVector color;
+    CImVector color{};
     color.value = this->m_data.u[0];
     return color;
 }

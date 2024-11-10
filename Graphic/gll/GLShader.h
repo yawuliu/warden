@@ -73,13 +73,13 @@ public:
 
     void FlushUniforms(GLGLSLProgram *);
 
-    std::string &GetCode(void);
+    std::string &GetCode();
 
-    int32_t GetShaderType(void);
+    int32_t GetShaderType();
 
     void ImmediateCompile(GLShaderLogInfo *);
 
-    bool IsEnabled(void);
+    bool IsEnabled();
 
     void SetShaderConstants(ShaderType, uint32_t, const float *, uint32_t);
 };

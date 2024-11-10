@@ -1,27 +1,24 @@
 #pragma once
 
-
 #include <cstdint>
 #include <map>
 #include <string>
 #include <vector>
 #include "Storm/Thread.h"
 #include "GLTypes.h"
-#include "GLAbstractWindow.h"
+#include "WGLContext.h"
 
-
-//typedef struct objc_object NSOpenGLContext;
-typedef struct objc_object NSOpenGLPixelFormat;
-typedef int CFDictionaryRef;
 
 class GLDevice;
+
+class GLAbstractWindow;
 
 class GLContext {
 public:
     // Types
     struct Context {
-        HGLRC *context;// NSOpenGLContext
-        int pixelFormat;//NSOpenGLPixelFormat *
+        WGLContext *context;
+        int pixelFormat;
         int32_t sampleCount;
 
         ~Context();
@@ -40,19 +37,19 @@ public:
     };
 
     // Static variables
-    static HGLRC s_MainContext;// NSOpenGLContext *
+    static WGLContext *s_MainContext;
     static Blizzard::Thread::TLSSlot s_CurrentContext;
     static Blizzard::Thread::TLSSlot s_CurrentGLContext;
-    static CFDictionaryRef s_DesktopMode;
+    static int s_DesktopMode;
 
     // Static functions
-    static HGLRC GetNSOpenGLCurrentContext(void);//NSOpenGLContext *
+    static HGLRC GetNSOpenGLCurrentContext();
 
-    static HGLRC GetCurrentContext(void);//NSOpenGLContext *
+    static WGLContext *GetCurrentContext();
 
-    static void SetCurrentContext(HGLRC);//NSOpenGLContext *
+    static void SetCurrentContext(WGLContext *);
 
-    static GLContext *GetCurrentGLContext(void);
+    static GLContext *GetCurrentGLContext();
 
     static void SetCurrentGLContext(GLContext *);
 
@@ -61,7 +58,7 @@ public:
     std::map<uint32_t, GLContext::Context, std::less<uint32_t>, std::allocator<std::pair<const uint32_t, GLContext::Context>>> m_Contexts;
     Context *m_Context;
     GLDevice *m_Device;
-    GLAbstractWindow *m_Window{nullptr};
+    GLAbstractWindow *m_Window;
     bool m_Windowed;
     bool m_MTGLEnabled;
     bool m_VSyncEnabled;
@@ -85,11 +82,11 @@ public:
 
     int32_t GetBackingHeight();
 
-    int32_t GetWidth(void);
+    int32_t GetWidth();
 
-    int32_t GetHeight(void);
+    int32_t GetHeight();
 
-    bool IsCurrentContext(void);
+    bool IsCurrentContext();
 
     void MakeCurrent(bool);
 
@@ -99,9 +96,9 @@ public:
 
     void SetWindow(GLAbstractWindow *, bool);
 
-    void Swap(void);
+    void Swap();
 
-    void Update(void);
+    void Update();
 };
 
 

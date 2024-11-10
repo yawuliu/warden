@@ -7,15 +7,6 @@
 #include <string>
 
 
-typedef struct objc_object GLFullscreenWindow;
-typedef struct objc_object NSView;
-typedef struct objc_object NSWindow;
-typedef struct objc_object NSEvent;
-
-
-class GLContext;
-
-
 struct GLWindowCallbacks {
     void (*OnResized)(int32_t, int32_t, bool);
 
@@ -25,53 +16,63 @@ struct GLWindowCallbacks {
 
     void (*OnMouseUp)(int16_t, int32_t, int32_t);
 
-    void (*OnKeyDown)(NSEvent *);
-
-    void (*OnKeyUp)(NSEvent *);
+    void (*OnKeyDown)(WPARAM);  // Using WPARAM for key codes
+    void (*OnKeyUp)(WPARAM);
 };
 
 class GLWindow : public GLAbstractWindow {
 public:
-    // Member variables
-    // void** var0; // _vptr$GLAbstractWindow
-    GLContext *m_Context = nullptr;
-    NSWindow *m_Window = nullptr;
-    bool m_Shown = 0;
-    GLLayerView *m_View = nullptr;
+//    // Member variables
+//    // void** var0; // _vptr$GLAbstractWindow
+    HGLRC m_Context = nullptr;
+    HWND m_Window = nullptr;
+    bool m_Shown = false;
+//    GLLayerView *m_View = nullptr;
     std::string m_ViewClass;
-    GLFullscreenWindow *m_FullscreenWindow = nullptr;
+    GLAbstractWindow *m_FullscreenWindow = nullptr;
     GLWindowCallbacks *m_Callbacks;
     GLWindowCallbacks *m_ActiveCallbacks;
+    RECT m_WindowedRect;
 
     // Member functions
-    bool CanEnterFullscreenMode(void);
+    bool CanEnterFullscreenMode();
 
-    void CreateView(void);
+    void CreateView();
 
-    CGRect GetBackingRect();
+    NTempest::CRect GetBackingRect();
 
-    NSView *GetNSView(void);
+    HWND GetNSView();
 
-    CGRect GetRect(void);
+    NTempest::CRect GetRect();
 
-    void ExitFullscreenMode(void);
+    void EnterFullscreenMode();
 
-    void Init(const CGRect &, GLWindowCallbacks *);
+    void ExitFullscreenMode();
+
+    void Init(const NTempest::CRect &, GLWindowCallbacks *);
 
     void Resize(uint32_t, uint32_t);
 
-    void SetOpenGLContext(GLContext *);
+    void SetOpenGLContext(HGLRC context);
 
-    void SetViewClass(const std::string &);
+    void SetViewClass(const std::string &viewClass);
 
-    void Show(void);
-
-    void Sub70760(void);
+    void Show();
 
     // Virtual member functions
     virtual void SetCallbacks(GLWindowCallbacks *);
 
     virtual void SetTitle(const char *);
+
+    int32_t GetWidth(void) override;
+
+    int32_t GetHeight(void) override;
+
+    void SetOpenGLContext(GLContext *context) override;
+
+    int32_t GetBackingWidth() override;
+
+    int32_t GetBackingHeight() override;
 };
 
 

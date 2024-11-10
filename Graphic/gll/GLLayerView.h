@@ -1,52 +1,59 @@
 #pragma once
 
+#include <windows.h>
+#include "GLWindow.h"
 
 class GLWindow;
 
 class GLLayerView {
 public:
-    CGDirectDisplayID m_display;
-    GLWindow *m_GLWindow;
-    NSOpenGLContext *m_savedContext;
-    NSCursor *m_cursor;
-public:
+    HMONITOR m_display;             // Monitor display ID, corresponds to CGDirectDisplayID
+    GLWindow *m_GLWindow;           // Pointer to the associated window
+    HGLRC m_savedContext;           // Saved OpenGL context (similar to NSOpenGLContext)
+    HCURSOR m_cursor;               // Mouse cursor (similar to NSCursor)
+
+    // Constructor
+    GLLayerView();
+
+    // Methods corresponding to macOS events and functionality
     bool acceptsFirstResponder();
 
-    void drawRect(NSRect dirtyRect);
+    void drawRect(RECT dirtyRect);  // In Win32, RECT is used instead of NSRect
+    int initWithFrame(RECT frame, GLWindow *window);
 
-    int initWithFrame(NSRect frame, GLWindow window);
+    void keyDown(WPARAM keyCode);
 
-    void keyDown(NSEvent *event);
+    void keyUp(WPARAM keyCode);
 
-    void keyUp(NSEvent *event);
+    void mouseDown(WPARAM button, LPARAM coords);
 
-    void mouseDown(NSEvent *event);
+    void mouseDragged(LPARAM coords);
 
-    void mouseDragged(NSEvent *event);
+    void mouseMoved(LPARAM coords);
 
-    void mouseMoved(NSEvent *event);
+    void mouseUp(WPARAM button, LPARAM coords);
 
-    void mouseUp(NSEvent *event);
+    void otherMouseDown(WPARAM button, LPARAM coords);
 
-    void otherMouseDown(NSEvent *event);
+    void otherMouseDragged(LPARAM coords);
 
-    void otherMouseDragged(NSEvent *event);
+    void otherMouseUp(WPARAM button, LPARAM coords);
 
-    void otherMouseUp(NSEvent *event);
+    void rightMouseDown(LPARAM coords);
 
-    void rightMouseDown(NSEvent *event);
+    void rightMouseDragged(LPARAM coords);
 
-    void rightMouseDragged(NSEvent *event);
+    void rightMouseUp(LPARAM coords);
 
-    void rightMouseUp(NSEvent *event);
-
-    void scrollWheel(NSEvent *event);
+    void scrollWheel(WPARAM wParam, LPARAM lParam);
 
     void viewDidChangeBackingProperties();
 
     void viewDidEndLiveResize();
 
     void update();
+
+    static LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 

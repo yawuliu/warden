@@ -126,7 +126,7 @@ public:
 
     virtual void CapsWindowSizeInScreenCoords(CRect &dst) = 0;
 
-    virtual void ScenePresent(void);
+    virtual void ScenePresent();
 
     virtual void SceneClear(uint32_t, CImVector) {};
 
@@ -161,7 +161,7 @@ public:
 
     virtual void IShaderCreate(CGxShader *) = 0;
 
-    virtual int32_t StereoEnabled(void) = 0;
+    virtual int32_t StereoEnabled() = 0;
 
     // Member functions
     CGxDevice();
@@ -172,27 +172,27 @@ public:
 
     CGxBuf *BufStream(EGxPoolTarget, uint32_t, uint32_t);
 
-    void DeviceCreatePools(void);
+    void DeviceCreatePools();
 
-    void DeviceCreateStreamBufs(void);
+    void DeviceCreateStreamBufs();
 
-    const CRect &DeviceCurWindow(void);
+    const CRect &DeviceCurWindow();
 
     void DeviceSetCurWindow(const CRect &);
 
     void DeviceSetDefWindow(CRect const &);
 
-    const CRect &DeviceDefWindow(void);
+    const CRect &DeviceDefWindow();
 
     int32_t IDevIsWindowed();
 
     void IRsDirty(EGxRenderState);
 
-    void IRsForceUpdate(void);
+    void IRsForceUpdate();
 
     void IRsForceUpdate(EGxRenderState);
 
-    void IRsInit(void);
+    void IRsInit();
 
     void IRsSync(int32_t);
 
@@ -222,13 +222,13 @@ public:
 
     void RsSet(EGxRenderState, void *);
 
-    void RsSetAlphaRef(void);
+    void RsSetAlphaRef();
 
-    void RsPop(void);
+    void RsPop();
 
-    void RsPush(void);
+    void RsPush();
 
-    void ShaderConstantsClear(void);
+    void ShaderConstantsClear();
 
     char *ShaderConstantsLock(EGxShTarget target);
 
@@ -255,4 +255,4 @@ public:
     void XformViewport(float &, float &, float &, float &, float &, float &);
 };
 
-extern CGxDevice* g_theGxDevicePtr;
+extern CGxDevice *g_theGxDevicePtr;

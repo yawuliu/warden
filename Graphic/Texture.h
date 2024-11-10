@@ -78,7 +78,7 @@ int32_t TextureGetDimensions(HTEXTURE, uint32_t *, uint32_t *, int32_t);
 
 void TextureIncreasePriority(CTexture *);
 
-void TextureInitialize(void);
+void TextureInitialize();
 
 int32_t TextureIsSame(HTEXTURE textureHandle, const char *fileName);
 

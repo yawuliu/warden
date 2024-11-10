@@ -60,3 +60,11 @@ CRect *CRect::Clamp(C2Vector &a2) {
 bool CRect::Sub4826D0() const {
     return this->maxY < 0.0f || this->minY > 1.0f || this->maxX < 0.0f || this->minX > 1.0f;
 }
+
+const float &CRect::Width() const {
+    return this->maxX - this->minX;
+}
+
+const float &CRect::Height() const {
+    return this->maxY - this->minY;
+}

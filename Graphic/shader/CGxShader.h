@@ -27,7 +27,7 @@ public:
     // Member functions
     void Load(SFile *);
 
-    int32_t Valid(void);
+    int32_t Valid();
 };
 
 

@@ -42,7 +42,7 @@ public:
 
     void ApplyVertexFormat(GLDevice *);
 
-    Properties &GetProperties(void);
+    Properties &GetProperties();
 };
 
 
