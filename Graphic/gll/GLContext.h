@@ -9,6 +9,9 @@
 #include "WGLContext.h"
 
 
+// https://github.com/SFML/SFML/blob/master/src/SFML/Window/Win32/WglContext.hpp
+// https://docs.kanzi.com/3.9.8/en/reference/kanzi-runtime-api/a01314.html
+// https://doc.qt.io/qt-6/qopenglcontext.html
 class GLDevice;
 
 class GLAbstractWindow;
@@ -43,7 +46,7 @@ public:
     static int s_DesktopMode;
 
     // Static functions
-    static HGLRC GetNSOpenGLCurrentContext();
+    static WGLContext *GetNSOpenGLCurrentContext();
 
     static WGLContext *GetCurrentContext();
 

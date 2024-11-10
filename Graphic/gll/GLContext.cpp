@@ -56,8 +56,8 @@ GLContext::Context::~Context() {
 //    this->pixelFormat->release();
 }
 
-HGLRC GLContext::GetNSOpenGLCurrentContext() {
-    return wglGetCurrentContext();
+WGLContext *GLContext::GetNSOpenGLCurrentContext() {
+    return GetCurrentContext();
 }
 
 WGLContext *GLContext::GetCurrentContext() {
@@ -134,10 +134,10 @@ bool GLContext::IsCurrentContext() {
 void GLContext::MakeCurrent(bool a2) {
     BLIZZARD_ASSERT(this->m_Context->context != nullptr);
 
-    //if (a2) {
-    //    HGLRC v6 = GLContext::GetNSOpenGLCurrentContext();
-    //    GLContext::SetCurrentContext(v6);
-    //}
+    if (a2) {
+        WGLContext *v6 = GLContext::GetNSOpenGLCurrentContext();
+        GLContext::SetCurrentContext(v6);
+    }
 
     if (this->m_Context->context != GLContext::GetCurrentContext()) {
         int32_t mtglEnabled = 0;
