@@ -105,7 +105,7 @@ void GLTexture::FreeTexture() {
 
     // TODO this->Sub690D0();
 
-    glDeleteTextures(1, &this->m_TextureID);
+    device->glDeleteTextures(1, &this->m_TextureID);
 
     this->m_GenerateMipmaps = 0;
     this->m_MaxMipmapLevel = 1000;
@@ -210,7 +210,7 @@ void *GLTexture::Map(uint32_t level, const GLRect *a3, uint32_t &a4, GLEnum a5) 
 void GLTexture::RecreateGLTexture() {
     BLIZZARD_ASSERT(GLDevice::Get()->m_TexWorker != nullptr);
 
-    if (this->m_TextureType == GL_TEXTURE_RECTANGLE_EXT) {
+    if (this->m_TextureType == GL_TEXTURE_RECTANGLE_NV) {
         return;
     }
 
@@ -223,19 +223,19 @@ void GLTexture::RecreateGLTexture() {
             this->m_Mipmaps[face][level].Unmap();
         }
     }
-
-    glTexParameterf(this->m_TextureType, GL_TEXTURE_LOD_BIAS, this->m_Sampler.mipmapBias);
-    glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_S, this->m_Sampler.addressModeS);
-    glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_T, this->m_Sampler.addressModeT);
-    glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_R, this->m_Sampler.addressModeR);
-    glTexParameteri(this->m_TextureType, GL_TEXTURE_MIN_FILTER, this->m_Sampler.minFilterMode);
-    glTexParameteri(this->m_TextureType, GL_TEXTURE_MAG_FILTER, this->m_Sampler.magFilterMode);
-    glTexParameterf(this->m_TextureType, GL_TEXTURE_MAX_ANISOTROPY_EXT, this->m_Sampler.maxAnisotropy);
-    glTexParameterfv(this->m_TextureType, GL_TEXTURE_BORDER_COLOR,
-                     reinterpret_cast<GLfloat *>(&this->m_Sampler.borderColor));
-    glTexParameteri(this->m_TextureType, GL_TEXTURE_MAX_LEVEL, this->m_MaxMipmapLevel);
-    glTexParameteri(this->m_TextureType, GL_TEXTURE_BASE_LEVEL, this->m_BaseMipmapLevel);
-    glTexParameteri(this->m_TextureType, GL_GENERATE_MIPMAP, this->m_GenerateMipmaps);
+    auto device = GLDevice::Get();
+    device->glTexParameterf(this->m_TextureType, GL_TEXTURE_LOD_BIAS, this->m_Sampler.mipmapBias);
+    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_S, this->m_Sampler.addressModeS);
+    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_T, this->m_Sampler.addressModeT);
+    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_R, this->m_Sampler.addressModeR);
+    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_MIN_FILTER, this->m_Sampler.minFilterMode);
+    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_MAG_FILTER, this->m_Sampler.magFilterMode);
+    device->glTexParameterf(this->m_TextureType, GL_TEXTURE_MAX_ANISOTROPY_EXT, this->m_Sampler.maxAnisotropy);
+    device->glTexParameterfv(this->m_TextureType, GL_TEXTURE_BORDER_COLOR,
+                             reinterpret_cast<GLfloat *>(&this->m_Sampler.borderColor));
+    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_MAX_LEVEL, this->m_MaxMipmapLevel);
+    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_BASE_LEVEL, this->m_BaseMipmapLevel);
+    device->glTexParameteri(this->m_TextureType, GL_GENERATE_MIPMAP, this->m_GenerateMipmaps);
 }
 
 void GLTexture::ResizeMipmaps() {
@@ -258,10 +258,10 @@ void GLTexture::SetAddressModeS(GLEnum mode) {
     if (this->m_Sampler.addressModeS == mode) {
         return;
     }
-
+    auto device = GLDevice::Get();
     if (mode == GL_CLAMP_TO_EDGE) {
         this->Bind(nullptr, 0);
-        glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_S, mode);
+        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_S, mode);
         this->m_Sampler.addressModeS = mode;
     } else {
         // Workaround for buggy GPU (possibly ATI Radeon X1900)
@@ -276,7 +276,7 @@ void GLTexture::SetAddressModeS(GLEnum mode) {
         }
 
         this->Bind(nullptr, 0);
-        glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_S, mode);
+        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_S, mode);
         this->m_Sampler.addressModeS = mode;
     }
 }
@@ -285,10 +285,10 @@ void GLTexture::SetAddressModeT(GLEnum mode) {
     if (this->m_Sampler.addressModeT == mode) {
         return;
     }
-
+    auto device = GLDevice::Get();
     if (mode == GL_CLAMP_TO_EDGE) {
         this->Bind(nullptr, 0);
-        glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_T, mode);
+        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_T, mode);
         this->m_Sampler.addressModeT = mode;
     } else {
         // Workaround for buggy GPU (possibly ATI Radeon X1900)
@@ -303,7 +303,7 @@ void GLTexture::SetAddressModeT(GLEnum mode) {
         }
 
         this->Bind(nullptr, 0);
-        glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_T, mode);
+        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_T, mode);
         this->m_Sampler.addressModeT = mode;
     }
 }
@@ -318,10 +318,10 @@ void GLTexture::SetCompareMode(GLEnum compareMode) {
             || this->GetFormatInfo().m_DataFormat == GL_DEPTH_STENCIL_EXT
             || compareMode == GL_NONE
     );
-
+    auto device = GLDevice::Get();
     if (this->m_CompareMode != compareMode) {
         this->Bind(nullptr, 0);
-        glTexParameteri(this->m_TextureType, GL_TEXTURE_COMPARE_MODE, compareMode);
+        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_COMPARE_MODE, compareMode);
         this->m_CompareMode = compareMode;
     }
 }
@@ -334,9 +334,9 @@ void GLTexture::SetMagFilterMode(GLEnum mode) {
     if (GLDevice::GetRendererInfo().vendor_id == 2 && this->IsRenderTarget() && mode != GL_LINEAR) {
         return;
     }
-
+    auto device = GLDevice::Get();
     this->Bind(nullptr, 0);
-    glTexParameteri(this->m_TextureType, GL_TEXTURE_MAG_FILTER, mode);
+    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_MAG_FILTER, mode);
     this->m_Sampler.magFilterMode = mode;
 }
 
@@ -344,9 +344,9 @@ void GLTexture::SetMaxAnisotropy(int32_t maxAnisotropy) {
     if (this->m_Sampler.maxAnisotropy == maxAnisotropy) {
         return;
     }
-
+    auto device = GLDevice::Get();
     this->Bind(nullptr, 0);
-    glTexParameterf(this->m_TextureType, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy);
+    device->glTexParameterf(this->m_TextureType, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy);
     this->m_Sampler.maxAnisotropy = maxAnisotropy;
 }
 
@@ -358,9 +358,9 @@ void GLTexture::SetMinFilterMode(GLEnum mode) {
     if (GLDevice::GetRendererInfo().vendor_id == 2 && this->IsRenderTarget() && mode != GL_LINEAR) {
         return;
     }
-
+    auto device = GLDevice::Get();
     this->Bind(nullptr, 0);
-    glTexParameteri(this->m_TextureType, GL_TEXTURE_MIN_FILTER, mode);
+    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_MIN_FILTER, mode);
     this->m_Sampler.minFilterMode = mode;
 }
 
@@ -503,7 +503,7 @@ void GLTexture::SetupTexture() {
         this->SetMinFilterMode(GL_LINEAR);
         this->SetMagFilterMode(GL_LINEAR);
 
-        glTexParameteri(this->m_TextureType, GL_TEXTURE_STORAGE_HINT_APPLE, GL_STORAGE_CACHED_APPLE);
+        // glTexParameteri(this->m_TextureType, GL_TEXTURE_STORAGE_HINT, GL_STORAGE_CACHED);
     } else {
         this->SetAddressModeR(GL_REPEAT);
         this->SetAddressModeS(GL_REPEAT);
@@ -515,8 +515,8 @@ void GLTexture::SetupTexture() {
     if (this->GetFormatInfo().m_DataFormat == GL_DEPTH_COMPONENT ||
         this->GetFormatInfo().m_DataFormat == GL_DEPTH_STENCIL) {
         this->SetCompareMode(GLDevice::m_ExtARBShadow >= 1 ? GL_COMPARE_R_TO_TEXTURE : 0);
-        glTexParameteri(this->m_TextureType, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-        glTexParameteri(this->m_TextureType, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
+        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+        device->glTexParameteri(this->m_TextureType, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
     } else {
         this->SetCompareMode(0);
     }
@@ -528,18 +528,18 @@ void GLTexture::SetupTexture() {
     int32_t autogenMipmap = this->m_Flags & GLTFLAG_AUTOGEN_MIPMAP;
     if (autogenMipmap != this->m_GenerateMipmaps) {
         this->Bind(nullptr, 0);
-        glTexParameteri(this->m_TextureType, GL_GENERATE_MIPMAP, autogenMipmap);
+        device->glTexParameteri(this->m_TextureType, GL_GENERATE_MIPMAP, autogenMipmap);
         this->m_GenerateMipmaps = autogenMipmap;
     }
 
     int32_t maxMipmapLevel = this->m_NumMipmap - 1;
     if (maxMipmapLevel != this->m_MaxMipmapLevel) {
         this->Bind(nullptr, 0);
-        glTexParameteri(this->m_TextureType, GL_TEXTURE_MAX_LEVEL, maxMipmapLevel);
+        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_MAX_LEVEL, maxMipmapLevel);
         this->m_MaxMipmapLevel = maxMipmapLevel;
     }
 
-    if (this->m_TextureType == GL_TEXTURE_RECTANGLE_EXT) {
+    if (this->m_TextureType == GL_TEXTURE_RECTANGLE_NV) {
         return;
     }
 

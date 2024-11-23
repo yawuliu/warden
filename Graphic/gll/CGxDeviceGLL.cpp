@@ -11,6 +11,8 @@
 #include <cstring>
 #include <NTempest/CiRect.h>
 #include <NTempest/CRect.h>
+#include <QGuiApplication>
+#include <QScreen>
 
 using namespace NTempest;
 
@@ -139,12 +141,12 @@ void CGxDeviceGLL::CapsWindowSize(CRect &rect) {
 void CGxDeviceGLL::CapsWindowSizeInScreenCoords(CRect &dst) {
     if (this->IDevIsWindowed()) {
         auto windowRect = this->DeviceCurWindow();
-        auto deviceRect = this->m_glWindow.GetRect();
+        auto deviceRect = this->m_glWindow->geometry();
 
-        dst.minX = windowRect.minX + deviceRect.minX;
-        dst.maxX = windowRect.maxX + deviceRect.minX;
-        dst.minY = windowRect.minY + deviceRect.minY;
-        dst.maxY = windowRect.maxY + deviceRect.minY;
+        dst.minX = windowRect.minX + deviceRect.left();
+        dst.maxX = windowRect.maxX + deviceRect.left();
+        dst.minY = windowRect.minY + deviceRect.bottom();
+        dst.maxY = windowRect.maxY + deviceRect.bottom();
     } else {
         dst = this->DeviceCurWindow();
     }
@@ -191,12 +193,12 @@ CGxDeviceGLL::DeviceCreate(int32_t (*windowProc)(void *window, uint32_t message,
         rect.maxX = newBounds.right;
         rect.minY = newBounds.bottom;
     }
+    QScreen *primaryScreen = QGuiApplication::primaryScreen();
+    this->m_glWindow = new GLWindow(primaryScreen, nullptr);
+    //this->m_glWindow->SetViewClass(GetEngineViewClass());
+    this->m_glWindow->setTitle("World of Warcraft");
 
-    this->m_glWindow.SetViewClass(GetEngineViewClass());
-    this->m_glWindow.Init(rect, nullptr);
-    this->m_glWindow.SetTitle("World of Warcraft");
-
-    this->m_glDevice.Init(&this->m_glWindow, "WoW", 4, GLTF_D24);
+    this->m_glDevice.Init(this->m_glWindow, "WoW", 4, GLTF_D24);
 
     GLDevice::SetOption(GLDevice::eShaderConstantBindings, false);
     GLDevice::SetOption(GLDevice::eUseMTGL, true);
@@ -210,9 +212,9 @@ CGxDeviceGLL::DeviceCreate(int32_t (*windowProc)(void *window, uint32_t message,
 
         GLWindowCallbacks *v15 = new GLWindowCallbacks();
         AssignEngineViewCallbacks(v15);
-        this->m_glWindow.SetCallbacks(v15);
+        this->m_glWindow->SetCallbacks(v15);
 
-        this->m_glWindow.Show();
+        this->m_glWindow->show();
 
         // TODO
         // (this + 4008) = 1;
@@ -349,7 +351,7 @@ int32_t CGxDeviceGLL::DeviceSetFormat(const CGxFormat &format) {
 }
 
 void *CGxDeviceGLL::DeviceWindow() {
-    return &this->m_glWindow;
+    return this->m_glWindow;
 }
 
 void CGxDeviceGLL::Draw(CGxBatch *batch, int32_t indexed) {

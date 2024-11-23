@@ -4,6 +4,7 @@
 #include "GLObject.h"
 #include "GL.h"
 
+
 class GLBuffer : public GLObject {
 public:
     // Types

@@ -41,7 +41,7 @@ void GLMipmap::Attach(GLFramebuffer *framebuffer, GLenum attachPoint, int32_t a4
 
     if (framebufferID) {
         if (this->m_Target == GL_TEXTURE_3D) {
-            glFramebufferTexture3DEXT(
+            device->functions4_5->glFramebufferTexture3D(
                     GL_FRAMEBUFFER,
                     attachPoint,
                     GL_TEXTURE_3D,
@@ -50,7 +50,7 @@ void GLMipmap::Attach(GLFramebuffer *framebuffer, GLenum attachPoint, int32_t a4
                     a4
             );
         } else {
-            glFramebufferTexture2DEXT(
+            device->glFramebufferTexture2D(
                     GL_FRAMEBUFFER,
                     attachPoint,
                     this->m_Target,
@@ -62,7 +62,7 @@ void GLMipmap::Attach(GLFramebuffer *framebuffer, GLenum attachPoint, int32_t a4
 
     if (attachPoint == GL_DEPTH_ATTACHMENT && !this->m_DepthBits) {
         GLint depthBits = 0;
-        glGetIntegerv(GL_DEPTH_BITS, &depthBits);
+        device->glGetIntegerv(GL_DEPTH_BITS, &depthBits);
         this->m_DepthBits = depthBits;
     }
 
@@ -83,6 +83,8 @@ void GLMipmap::Attach(GLFramebuffer *framebuffer, GLenum attachPoint, int32_t a4
 }
 
 void GLMipmap::Detach(GLFramebuffer *framebuffer, GLenum attachPoint, bool a4) {
+    GLDevice *device = GLDevice::Get();
+
     GLuint framebufferID = framebuffer->m_FramebufferID;
 
     auto &attachPoints = *this->m_AttachPoints;
@@ -96,9 +98,9 @@ void GLMipmap::Detach(GLFramebuffer *framebuffer, GLenum attachPoint, bool a4) {
         v12->BindFramebuffer(framebuffer);
 
         if (this->m_Target == GL_TEXTURE_3D) {
-            glFramebufferTexture3DEXT(GL_FRAMEBUFFER, attachPoint, GL_TEXTURE_3D, 0, 0, 0);
+            device->functions4_5->glFramebufferTexture3D(GL_FRAMEBUFFER, attachPoint, GL_TEXTURE_3D, 0, 0, 0);
         } else {
-            glFramebufferTexture2DEXT(GL_FRAMEBUFFER, attachPoint, this->m_Target, 0, 0);
+            device->glFramebufferTexture2D(GL_FRAMEBUFFER, attachPoint, this->m_Target, 0, 0);
         }
 
         v12->BindFramebuffer(v14);
@@ -341,9 +343,9 @@ void GLMipmap::ResetSize(uint32_t width, uint32_t height, uint32_t depth) {
 void GLMipmap::TexImage(const void *pixels) {
     BLIZZARD_ASSERT((this->m_Texture->IsRenderTarget() || pixels != nullptr) &&
                     GLDevice::Get()->GetVertexArrayStates().buffers[eGLBT_PIXEL_UNPACK] == 0);
-
+    GLDevice *device = GLDevice::Get();
     if (this->m_Target == GL_TEXTURE_3D) {
-        glTexImage3D(
+        device->glTexImage3D(
                 GL_TEXTURE_3D,
                 this->m_Level,
                 this->GetFormatInfo().m_InternalFormat,
@@ -356,7 +358,7 @@ void GLMipmap::TexImage(const void *pixels) {
                 pixels
         );
     } else if (this->GetFormatInfo().m_IsCompressed) {
-        glCompressedTexImage2D(
+        device->glCompressedTexImage2D(
                 this->m_Target,
                 this->m_Level,
                 this->GetFormatInfo().m_InternalFormat,
@@ -367,7 +369,7 @@ void GLMipmap::TexImage(const void *pixels) {
                 pixels
         );
     } else {
-        glTexImage2D(
+        device->glTexImage2D(
                 this->m_Target,
                 this->m_Level,
                 this->GetFormatInfo().m_InternalFormat,
@@ -384,12 +386,12 @@ void GLMipmap::TexImage(const void *pixels) {
 void GLMipmap::TexSubImage(const GLBox &a2, int32_t size, const void *pixels) {
     BLIZZARD_ASSERT(!this->m_Texture->IsRenderTarget() && pixels != nullptr &&
                     GLDevice::Get()->GetVertexArrayStates().buffers[eGLBT_PIXEL_UNPACK] == 0);
-
+    GLDevice *device = GLDevice::Get();
     if (this->m_Target == GL_TEXTURE_3D) {
-        glPixelStorei(GL_UNPACK_ROW_LENGTH, this->m_Width);
-        glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, this->m_Height);
+        device->glPixelStorei(GL_UNPACK_ROW_LENGTH, this->m_Width);
+        device->glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, this->m_Height);
 
-        glTexSubImage3D(
+        device->glTexSubImage3D(
                 this->m_Target,
                 this->m_Level,
                 a2.left,
@@ -403,10 +405,10 @@ void GLMipmap::TexSubImage(const GLBox &a2, int32_t size, const void *pixels) {
                 pixels
         );
 
-        glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
-        glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, 0);
+        device->glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+        device->glPixelStorei(GL_UNPACK_IMAGE_HEIGHT, 0);
     } else if (this->GetFormatInfo().m_IsCompressed) {
-        glCompressedTexSubImage2D(
+        device->glCompressedTexSubImage2D(
                 this->m_Target,
                 this->m_Level,
                 0,
@@ -418,9 +420,9 @@ void GLMipmap::TexSubImage(const GLBox &a2, int32_t size, const void *pixels) {
                 pixels
         );
     } else {
-        glPixelStorei(GL_UNPACK_ROW_LENGTH, this->m_Width);
+        device->glPixelStorei(GL_UNPACK_ROW_LENGTH, this->m_Width);
 
-        glTexSubImage2D(
+        device->glTexSubImage2D(
                 this->m_Target,
                 this->m_Level,
                 a2.left,
@@ -432,7 +434,7 @@ void GLMipmap::TexSubImage(const GLBox &a2, int32_t size, const void *pixels) {
                 pixels
         );
 
-        glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
+        device->glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
     }
 }
 

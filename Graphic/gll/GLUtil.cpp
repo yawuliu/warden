@@ -12,7 +12,7 @@ uint32_t GLLTextureTypeToIndex(GLEnum textureType) {
         index = 1;
     } else if (textureType == GL_TEXTURE_CUBE_MAP) {
         index = 2;
-    } else if (textureType == GL_TEXTURE_RECTANGLE_EXT) {
+    } else if (textureType == GL_TEXTURE_RECTANGLE_NV) {
         index = 3;
     } else {
         index = 5;

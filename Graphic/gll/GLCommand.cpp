@@ -1,8 +1,9 @@
 #include "GLCommand.h"
 #include "GLTexture.h"
+#include "GLDevice.h"
 
 void GLFlush::Execute(GLDevice *device) {
-    glFlush();
+    device->glFlush();
 }
 
 GLTexUnmap::GLTexUnmap(GLTexture *texture, GLMipmap *mipmap, GLMipmap::MapParams *mapParams) {

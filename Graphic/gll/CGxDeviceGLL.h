@@ -26,7 +26,7 @@ public:
 
     // Member variables
     GLDevice m_glDevice;
-    GLWindow m_glWindow;
+    GLWindow *m_glWindow;
     GLVertexFormat m_glFormats[GxVertexBufferFormats_Last] = {};
 
     // Virtual member functions

@@ -2,11 +2,8 @@
 
 #include <cstdint>
 #include <windows.h>
-//#include <gl/gl.h>
-//#include "opengl/glcorearb.h"  // download from https://www.khronos.org/registry/OpenGL/api/GL/glcorearb.h
-//#include "opengl/wglext.h"     // download from https://www.khronos.org/registry/OpenGL/api/GL/wglext.h
-//#include "opengl/glext.h"
-#include "GL/glew.h"
+#include <QGL>
+
 
 class GLBuffer;
 

@@ -18,10 +18,35 @@
 #include <list>
 #include <string>
 #include <vector>
+#include <QOpenGLExtraFunctions>
+#include <QOpenGLFunctions_1_1>
+#include <QOpenGLFunctions_3_3_Core>
+#include <QOpenGLFunctions_4_3_Core>
+#include <QOpenGLFunctions_4_5_Core>
+#include <QOpenGLFunctions_1_4>
 
+typedef void (APIENTRY *PFNGLBINDPROGRAMARBPROC)(GLenum target, GLuint program);
 
-class GLDevice {
+typedef void (APIENTRY *PFNGLGENPROGRAMSARBPROC)(GLsizei n, GLuint *programs);
+
+typedef void (APIENTRY *PFNGLPROGRAMSTRINGARBPROC)(GLenum target, GLenum format, GLsizei len, const void *string);
+
+typedef void (APIENTRY *PFNGLPROGRAMENVPARAMETERS4FVEXTPROC)(GLenum target, GLuint index, GLsizei count,
+                                                             const GLfloat *params);
+
+class GLDevice : public QOpenGLExtraFunctions {
 public:
+    QOpenGLFunctions_1_1 *functions1_1;
+    QOpenGLFunctions_1_4 *functions1_4;
+    QOpenGLFunctions_3_3_Core *functions3_3;
+    QOpenGLFunctions_4_5_Core *functions4_5;
+    QOpenGLFunctions_4_3_Core *functions4_3;
+
+    PFNGLBINDPROGRAMARBPROC glBindProgramARB;
+    PFNGLGENPROGRAMSARBPROC glGenProgramsARB;
+    PFNGLPROGRAMSTRINGARBPROC glProgramStringARB;
+    PFNGLPROGRAMENVPARAMETERS4FVEXTPROC glProgramEnvParameters4fvEXT;
+
     // Types
     enum GLDeviceOption {
         eUseMTGL = 0,
@@ -94,7 +119,7 @@ public:
     GLTexture2D *m_BackBufferColor = nullptr;
     GLTexture2D *m_BackBufferDepth = nullptr;
     GLTexture2D *m_BackBufferStencil = nullptr;
-    GLContext m_Context;
+    GLContext *m_Context;
     GLBufferPool *m_PBOPool = nullptr;
     GLWorker *m_TexWorker = nullptr;
     GLTexture *m_BoundTextures[4][16] = {};
