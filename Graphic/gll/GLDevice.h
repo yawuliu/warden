@@ -38,9 +38,8 @@ class GLDevice : public QOpenGLExtraFunctions {
 public:
     QOpenGLFunctions_1_1 *functions1_1;
     QOpenGLFunctions_1_4 *functions1_4;
-    QOpenGLFunctions_3_3_Core *functions3_3;
     QOpenGLFunctions_4_5_Core *functions4_5;
-    QOpenGLFunctions_4_3_Core *functions4_3;
+
 
     PFNGLBINDPROGRAMARBPROC glBindProgramARB;
     PFNGLGENPROGRAMSARBPROC glGenProgramsARB;
