@@ -1739,6 +1739,8 @@ void GLDevice::Init(GLAbstractWindow *a2, const char *a3, uint32_t a4, GLTexture
     if (this->m_Init) {
         return;
     }
+    this->m_Context->MakeCurrent(true);
+    initializeOpenGLFunctions();
 
 // 使用 QOpenGLContext 获取函数指针
     glBindProgramARB =

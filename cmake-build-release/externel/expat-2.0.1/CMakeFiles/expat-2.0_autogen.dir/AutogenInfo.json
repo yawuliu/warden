@@ -1,0 +1,79 @@
+{
+	"BUILD_DIR" : "F:/work_code/warden/cmake-build-release/externel/expat-2.0.1/expat-2.0_autogen",
+	"CMAKE_BINARY_DIR" : "F:/work_code/warden/cmake-build-release",
+	"CMAKE_CURRENT_BINARY_DIR" : "F:/work_code/warden/cmake-build-release/externel/expat-2.0.1",
+	"CMAKE_CURRENT_SOURCE_DIR" : "F:/work_code/warden/externel/expat-2.0.1",
+	"CMAKE_EXECUTABLE" : "E:/soft/CLion-2023.3.4.win/bin/cmake/win/x64/bin/cmake.exe",
+	"CMAKE_LIST_FILES" : 
+	[
+		"F:/work_code/warden/externel/expat-2.0.1/CMakeLists.txt",
+		"F:/work_code/warden/externel/expat-2.0.1/CMakeConfigure.cmake",
+		"E:/soft/CLion-2023.3.4.win/bin/cmake/win/x64/share/cmake-3.27/Modules/CheckIncludeFile.cmake",
+		"E:/soft/CLion-2023.3.4.win/bin/cmake/win/x64/share/cmake-3.27/Modules/CheckSymbolExists.cmake",
+		"E:/soft/CLion-2023.3.4.win/bin/cmake/win/x64/share/cmake-3.27/Modules/TestBigEndian.cmake",
+		"E:/soft/CLion-2023.3.4.win/bin/cmake/win/x64/share/cmake-3.27/Modules/CheckTypeSize.cmake",
+		"E:/soft/CLion-2023.3.4.win/bin/cmake/win/x64/share/cmake-3.27/Modules/CheckIncludeFile.cmake",
+		"E:/soft/CLion-2023.3.4.win/bin/cmake/win/x64/share/cmake-3.27/Modules/CheckIncludeFileCXX.cmake",
+		"F:/work_code/warden/externel/expat-2.0.1/expat_config.h.cmake"
+	],
+	"CMAKE_SOURCE_DIR" : "F:/work_code/warden",
+	"DEP_FILE" : "F:/work_code/warden/cmake-build-release/externel/expat-2.0.1/expat-2.0_autogen/deps",
+	"DEP_FILE_RULE_NAME" : "expat-2.0_autogen/timestamp",
+	"HEADERS" : 
+	[
+		[
+			"F:/work_code/warden/externel/expat-2.0.1/lib/xmlrole.h",
+			"MU",
+			"ZJOKMXDKB7/moc_xmlrole.cpp",
+			null
+		],
+		[
+			"F:/work_code/warden/externel/expat-2.0.1/lib/xmltok.h",
+			"MU",
+			"ZJOKMXDKB7/moc_xmltok.cpp",
+			null
+		]
+	],
+	"HEADER_EXTENSIONS" : [ "h", "hh", "h++", "hm", "hpp", "hxx", "in", "txx" ],
+	"INCLUDE_DIR" : "F:/work_code/warden/cmake-build-release/externel/expat-2.0.1/expat-2.0_autogen/include",
+	"MOC_COMPILATION_FILE" : "F:/work_code/warden/cmake-build-release/externel/expat-2.0.1/expat-2.0_autogen/mocs_compilation.cpp",
+	"MOC_DEFINITIONS" : [ "HAVE_EXPAT_CONFIG_H", "WIN32", "WIN32_LEAN_AND_MEAN", "XML_STATIC" ],
+	"MOC_DEPEND_FILTERS" : 
+	[
+		[
+			"Q_PLUGIN_METADATA",
+			"[\n][ \t]*Q_PLUGIN_METADATA[ \t]*\\([^\\)]*FILE[ \t]*\"([^\"]+)\""
+		]
+	],
+	"MOC_INCLUDES" : 
+	[
+		"F:/work_code/warden/externel/expat-2.0.1/lib",
+		"F:/work_code/warden/cmake-build-release/externel/expat-2.0.1"
+	],
+	"MOC_MACRO_NAMES" : [ "Q_OBJECT", "Q_GADGET", "Q_NAMESPACE", "Q_NAMESPACE_EXPORT" ],
+	"MOC_OPTIONS" : [],
+	"MOC_PATH_PREFIX" : false,
+	"MOC_PREDEFS_CMD" : [],
+	"MOC_PREDEFS_FILE" : "",
+	"MOC_RELAXED_MODE" : false,
+	"MOC_SKIP" : [],
+	"MULTI_CONFIG" : false,
+	"PARALLEL" : 8,
+	"PARSE_CACHE_FILE" : "F:/work_code/warden/cmake-build-release/externel/expat-2.0.1/CMakeFiles/expat-2.0_autogen.dir/ParseCache.txt",
+	"QT_MOC_EXECUTABLE" : "C:/Users/liuyawu/.vcpkg-clion/vcpkg/installed/x64-windows/tools/qt5/bin/moc.exe",
+	"QT_UIC_EXECUTABLE" : "C:/Users/liuyawu/.vcpkg-clion/vcpkg/installed/x64-windows/tools/qt5/bin/uic.exe",
+	"QT_VERSION_MAJOR" : 5,
+	"QT_VERSION_MINOR" : 15,
+	"SETTINGS_FILE" : "F:/work_code/warden/cmake-build-release/externel/expat-2.0.1/CMakeFiles/expat-2.0_autogen.dir/AutogenUsed.txt",
+	"SOURCES" : 
+	[
+		[ "F:/work_code/warden/externel/expat-2.0.1/lib/xmlparse.c", "MU", null ],
+		[ "F:/work_code/warden/externel/expat-2.0.1/lib/xmlrole.c", "MU", null ],
+		[ "F:/work_code/warden/externel/expat-2.0.1/lib/xmltok.c", "MU", null ]
+	],
+	"UIC_OPTIONS" : [],
+	"UIC_SEARCH_PATHS" : [],
+	"UIC_SKIP" : [],
+	"UIC_UI_FILES" : [],
+	"VERBOSITY" : 0
+}
