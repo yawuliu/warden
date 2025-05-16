@@ -6,15 +6,16 @@
 #include <vector>
 #include "Storm/Thread.h"
 #include "GLTypes.h"
-#include <QOpenGLContext>
+//#include <QOpenGLContext>
 #include "GLAbstractWindow.h"
+
 
 // https://github.com/SFML/SFML/blob/master/src/SFML/Window/Win32/WglContext.hpp
 // https://docs.kanzi.com/3.9.8/en/reference/kanzi-runtime-api/a01314.html
 // https://doc.qt.io/qt-6/qopenglcontext.html
 class GLDevice;
 
-class GLContext : public QOpenGLContext {
+class GLContext  {//: public QOpenGLContext
 public:
     struct GammaFormula {
         float m_RedMin;
@@ -49,7 +50,7 @@ public:
     // Member variables
     std::basic_string<char, std::char_traits<char>, std::allocator<char>> m_DebugName;
 //    std::map<uint32_t, GLContext::Context, std::less<uint32_t>, std::allocator<std::pair<const uint32_t, GLContext::Context>>> m_Contexts;
-    GLContext *m_Context;
+//    GladGLContext  m_Context;
     GLDevice *m_Device;
     GLAbstractWindow *m_Window;
     bool m_Windowed;

@@ -7,7 +7,7 @@
 
 static uint32_t s_lasterror = ERROR_SUCCESS;
 
-[[noreturn]] void SErrDisplayAppFatal(const char *format, ...) {
+void SErrDisplayAppFatal(const char *format, ...) {
     va_list args;
             va_start(args, format);
     vprintf(format, args);

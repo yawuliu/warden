@@ -26,9 +26,9 @@ void GLVertexArray::ApplyGLStates(GLStates::VertexArrayObject &vao) {
         auto &attrib = vao.vertexAttribs[i];
 
         if (attrib.enable) {
-            device->glBindBuffer(attrib.buffer->m_Type, attrib.buffer->m_BufferID);
+            glBindBuffer(attrib.buffer->m_Type, attrib.buffer->m_BufferID);
 
-            device->glVertexAttribPointer(
+            glVertexAttribPointer(
                     i,
                     attrib.size,
                     attrib.type,
@@ -37,62 +37,62 @@ void GLVertexArray::ApplyGLStates(GLStates::VertexArrayObject &vao) {
                     reinterpret_cast<void *>(attrib.offset)
             );
 
-            device->glEnableVertexAttribArray(i);
+            glEnableVertexAttribArray(i);
         } else {
-            device->glDisableVertexAttribArray(i);
+            glDisableVertexAttribArray(i);
         }
     }
 
     if (vao.position.enable) {
-        device->glBindBuffer(vao.position.buffer->m_Type, vao.position.buffer->m_BufferID);
-        device->functions1_1->glVertexPointer(vao.position.size, vao.position.type, vao.position.stride,
+        glBindBuffer(vao.position.buffer->m_Type, vao.position.buffer->m_BufferID);
+        glVertexPointer(vao.position.size, vao.position.type, vao.position.stride,
                                               vao.position.offset);
-        device->functions1_1->glEnableClientState(GL_VERTEX_ARRAY);
+        glEnableClientState(GL_VERTEX_ARRAY);
     } else {
-        device->functions1_1->glDisableClientState(GL_VERTEX_ARRAY);
+        glDisableClientState(GL_VERTEX_ARRAY);
     }
 
     if (vao.normal.enable) {
-        device->glBindBuffer(vao.normal.buffer->m_Type, vao.normal.buffer->m_BufferID);
-        device->functions1_1->glNormalPointer(vao.normal.type, vao.normal.stride, vao.normal.offset);
-        device->functions1_1->glEnableClientState(GL_NORMAL_ARRAY);
+        glBindBuffer(vao.normal.buffer->m_Type, vao.normal.buffer->m_BufferID);
+        glNormalPointer(vao.normal.type, vao.normal.stride, vao.normal.offset);
+        glEnableClientState(GL_NORMAL_ARRAY);
     } else {
-        device->functions1_1->glDisableClientState(GL_NORMAL_ARRAY);
+        glDisableClientState(GL_NORMAL_ARRAY);
     }
 
     if (vao.color0.enable) {
-        device->glBindBuffer(vao.color0.buffer->m_Type, vao.color0.buffer->m_BufferID);
-        device->functions1_1->glColorPointer(vao.color0.size, vao.color0.type, vao.color0.stride, vao.color0.offset);
-        device->functions1_1->glEnableClientState(GL_COLOR_ARRAY);
+        glBindBuffer(vao.color0.buffer->m_Type, vao.color0.buffer->m_BufferID);
+        glColorPointer(vao.color0.size, vao.color0.type, vao.color0.stride, vao.color0.offset);
+        glEnableClientState(GL_COLOR_ARRAY);
     } else {
-        device->functions1_1->glDisableClientState(GL_COLOR_ARRAY);
+        glDisableClientState(GL_COLOR_ARRAY);
     }
 
     if (vao.color1.enable) {
-        device->glBindBuffer(vao.color1.buffer->m_Type, vao.color1.buffer->m_BufferID);
-        device->functions1_1->glColorPointer(vao.color1.size, vao.color1.type, vao.color1.stride, vao.color1.offset);
-        device->functions1_1->glEnableClientState(GL_SECONDARY_COLOR_ARRAY);
+        glBindBuffer(vao.color1.buffer->m_Type, vao.color1.buffer->m_BufferID);
+        glColorPointer(vao.color1.size, vao.color1.type, vao.color1.stride, vao.color1.offset);
+        glEnableClientState(GL_SECONDARY_COLOR_ARRAY);
     } else {
-        device->functions1_1->glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
+        glDisableClientState(GL_SECONDARY_COLOR_ARRAY);
     }
 
     for (int32_t i = 0; i < 8; i++) {
-        device->functions4_5->glActiveTexture(GL_TEXTURE0 + i);
+        glActiveTexture(GL_TEXTURE0 + i);
 
         if (vao.texCoord[i].enable) {
-            device->glBindBuffer(vao.texCoord[i].buffer->m_Type, vao.texCoord[0].buffer->m_BufferID);
-            device->functions1_1->glTexCoordPointer(vao.texCoord[i].size, vao.texCoord[i].type, vao.texCoord[i].stride,
+            glBindBuffer(vao.texCoord[i].buffer->m_Type, vao.texCoord[0].buffer->m_BufferID);
+            glTexCoordPointer(vao.texCoord[i].size, vao.texCoord[i].type, vao.texCoord[i].stride,
                                                     vao.texCoord[i].offset);
-            device->functions1_1->glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+            glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         } else {
-            device->functions1_1->glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+            glDisableClientState(GL_TEXTURE_COORD_ARRAY);
         }
     }
 
-    device->glBindBuffer(GL_ARRAY_BUFFER, vao.buffers[0]);
-    device->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vao.buffers[1]);
-    device->glBindBuffer(GL_PIXEL_PACK_BUFFER, vao.buffers[2]);
-    device->glBindBuffer(GL_PIXEL_UNPACK_BUFFER, vao.buffers[3]);
+    glBindBuffer(GL_ARRAY_BUFFER, vao.buffers[0]);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vao.buffers[1]);
+    glBindBuffer(GL_PIXEL_PACK_BUFFER, vao.buffers[2]);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, vao.buffers[3]);
 
     this->m_GLStates = vao;
 }
@@ -106,7 +106,7 @@ void GLVertexArray::ApplyVertexFormat(GLDevice *device) {
     uint32_t indexBufferID = indexBuffer ? indexBuffer->m_BufferID : 0;
 
     if (this->m_GLStates.buffers[1] != indexBufferID) {
-        device->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
         this->m_GLStates.buffers[1] = indexBufferID;
     }
 
@@ -129,7 +129,7 @@ void GLVertexArray::ApplyVertexFormat(GLDevice *device) {
 
         if (useVertexShader || static_cast<uint32_t>(attrib.slot - 1) > 1) {
             if (this->m_GLStates.buffers[0] != vertexBuffer->m_BufferID) {
-                device->glBindBuffer(vertexBuffer->m_Type, vertexBuffer->m_BufferID);
+                glBindBuffer(vertexBuffer->m_Type, vertexBuffer->m_BufferID);
                 this->m_GLStates.buffers[0] = vertexBuffer->m_BufferID;
             }
 
@@ -141,7 +141,7 @@ void GLVertexArray::ApplyVertexFormat(GLDevice *device) {
                              + properties.m_VertexBase * stride;
 
             if (useVertexShader) {
-                device->glVertexAttribPointer(
+                glVertexAttribPointer(
                         attrib.slot,
                         k_VertexTypeInfo[attrib.type].m_Size,
                         k_VertexTypeInfo[attrib.type].m_Type,
@@ -152,7 +152,7 @@ void GLVertexArray::ApplyVertexFormat(GLDevice *device) {
             } else {
                 switch (attrib.slot) {
                     case 0: {
-                        device->functions1_1->glVertexPointer(
+                        glVertexPointer(
                                 k_VertexTypeInfo[attrib.type].m_Size,
                                 k_VertexTypeInfo[attrib.type].m_Type,
                                 stride,
@@ -163,7 +163,7 @@ void GLVertexArray::ApplyVertexFormat(GLDevice *device) {
                     }
 
                     case 3: {
-                        device->functions1_1->glNormalPointer(
+                        glNormalPointer(
                                 k_VertexTypeInfo[attrib.type].m_Type,
                                 stride,
                                 reinterpret_cast<void *>(offset)
@@ -173,7 +173,7 @@ void GLVertexArray::ApplyVertexFormat(GLDevice *device) {
                     }
 
                     case 4: {
-                        device->functions1_1->glColorPointer(
+                        glColorPointer(
                                 k_VertexTypeInfo[attrib.type].m_Size,
                                 k_VertexTypeInfo[attrib.type].m_Type,
                                 stride,
@@ -184,7 +184,7 @@ void GLVertexArray::ApplyVertexFormat(GLDevice *device) {
                     }
 
                     case 5: {
-                        device->functions1_4->glSecondaryColorPointer(
+                        glSecondaryColorPointer(
                                 k_VertexTypeInfo[attrib.type].m_Size,
                                 k_VertexTypeInfo[attrib.type].m_Type,
                                 stride,
@@ -204,8 +204,8 @@ void GLVertexArray::ApplyVertexFormat(GLDevice *device) {
                     case 13: {
                         auto tmu = attrib.slot - 6;
                         auto texCoordIndex = device->m_States.fixedFunc.texCoordIndex[tmu];
-                        device->functions4_5->glActiveTexture(GL_TEXTURE0 + texCoordIndex);
-                        device->functions1_1->glTexCoordPointer(
+                        glActiveTexture(GL_TEXTURE0 + texCoordIndex);
+                        glTexCoordPointer(
                                 k_VertexTypeInfo[attrib.type].m_Size,
                                 k_VertexTypeInfo[attrib.type].m_Type,
                                 stride,
@@ -226,9 +226,9 @@ void GLVertexArray::ApplyVertexFormat(GLDevice *device) {
 
             if (*prevAttribEnable != attribEnable[s]) {
                 if (attribEnable[s]) {
-                    device->glEnableVertexAttribArray(s);
+                    glEnableVertexAttribArray(s);
                 } else {
-                    device->glDisableVertexAttribArray(s);
+                    glDisableVertexAttribArray(s);
                 }
             }
 
@@ -282,7 +282,7 @@ void GLVertexArray::ApplyVertexFormat(GLDevice *device) {
                     prevAttribEnable = &this->m_GLStates.texCoord[texCoordIndex].enable;
                     glArray = GL_TEXTURE_COORD_ARRAY;
 
-                    device->functions4_5->glActiveTexture(GL_TEXTURE0 + texCoordIndex);
+                    glActiveTexture(GL_TEXTURE0 + texCoordIndex);
 
                     break;
                 }
@@ -294,9 +294,9 @@ void GLVertexArray::ApplyVertexFormat(GLDevice *device) {
             if (prevAttribEnable) {
                 if (*prevAttribEnable != attribEnable[s]) {
                     if (attribEnable[s]) {
-                        device->functions1_1->glEnableClientState(glArray);
+                        glEnableClientState(glArray);
                     } else {
-                        device->functions1_1->glDisableClientState(glArray);
+                        glDisableClientState(glArray);
                     }
                 }
 
@@ -306,7 +306,7 @@ void GLVertexArray::ApplyVertexFormat(GLDevice *device) {
     }
 
     if (!useVertexShader) {
-        // TODO device->SetColorMaterial(this->m_GLStates.color0.enable);
+        // TODO SetColorMaterial(this->m_GLStates.color0.enable);
     }
 }
 

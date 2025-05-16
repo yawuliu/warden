@@ -2,10 +2,10 @@
 #include "Event/Event.h"
 #include "Storm/StormInit.h"
 #include "Game/Client.h"
-#include <QGuiApplication>
+//#include <QGuiApplication>
 
 int WardenMain(int argc, char **argv) {
-    QGuiApplication app(argc, argv);
+//    QGuiApplication app(argc, argv);
     StormInitialize();
 
     // TODO
@@ -20,7 +20,7 @@ int WardenMain(int argc, char **argv) {
     }
     // TODO
     // - misc cleanup
-    return app.exec();
+//    return app.exec();
 }
 
 int main(int argc, char **argv) {

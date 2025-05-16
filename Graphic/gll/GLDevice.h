@@ -18,12 +18,12 @@
 #include <list>
 #include <string>
 #include <vector>
-#include <QOpenGLExtraFunctions>
-#include <QOpenGLFunctions_1_1>
-#include <QOpenGLFunctions_3_3_Core>
-#include <QOpenGLFunctions_4_3_Core>
-#include <QOpenGLFunctions_4_5_Core>
-#include <QOpenGLFunctions_1_4>
+//#include <QOpenGLExtraFunctions>
+//#include <QOpenGLFunctions_1_1>
+//#include <QOpenGLFunctions_3_3_Core>
+//#include <QOpenGLFunctions_4_3_Core>
+//#include <QOpenGLFunctions_4_5_Core>
+//#include <QOpenGLFunctions_1_4>
 
 typedef void (APIENTRY *PFNGLBINDPROGRAMARBPROC)(GLenum target, GLuint program);
 
@@ -34,11 +34,11 @@ typedef void (APIENTRY *PFNGLPROGRAMSTRINGARBPROC)(GLenum target, GLenum format,
 typedef void (APIENTRY *PFNGLPROGRAMENVPARAMETERS4FVEXTPROC)(GLenum target, GLuint index, GLsizei count,
                                                              const GLfloat *params);
 
-class GLDevice : public QOpenGLExtraFunctions {
+class GLDevice  {//: public QOpenGLExtraFunctions
 public:
-    QOpenGLFunctions_1_1 *functions1_1;
-    QOpenGLFunctions_1_4 *functions1_4;
-    QOpenGLFunctions_4_5_Core *functions4_5;
+//    QOpenGLFunctions_1_1 *functions1_1;
+//    QOpenGLFunctions_1_4 *functions1_4;
+//    QOpenGLFunctions_4_5_Core *functions4_5;
 
 
     PFNGLBINDPROGRAMARBPROC glBindProgramARB;

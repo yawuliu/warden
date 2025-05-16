@@ -135,13 +135,13 @@ GLMipmap *GLFramebuffer::GetAttachment(GLEnum a2) {
 }
 
 int32_t GLFramebuffer::GetSampleCount() {
-    return this->m_FramebufferID
-           ? 1
-           : this->m_Device->m_Context->m_Context->sampleCount;
+//    return this->m_FramebufferID
+//           ? 1
+//           : this->m_Device->m_Context->m_Context->sampleCount;
 }
 
 bool GLFramebuffer::IsValid() {
-    auto status = this->m_Device->glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    auto status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     return status == GL_FRAMEBUFFER_COMPLETE;
 }
 

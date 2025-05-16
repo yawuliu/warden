@@ -56,8 +56,8 @@ GLShader::Create(ShaderType shaderType, bool hybrid, bool usingCG, const char *a
 bool GLShader::CheckErrorsARB(GLShaderLogInfo *logInfo) {
     GLint errorPos;
 
-    this->m_Device->glGetIntegerv(GL_PROGRAM_ERROR_POSITION_ARB, &errorPos);
-    const GLubyte *errorStr = this->m_Device->glGetString(GL_PROGRAM_ERROR_STRING_ARB);
+    glGetIntegerv(GL_PROGRAM_ERROR_POSITION_ARB, &errorPos);
+    const GLubyte *errorStr = glGetString(GL_PROGRAM_ERROR_STRING_ARB);
 
     // TODO
     // Blizzard::Debug::VAssert(logInfo != 0 || errorPos == -1, errorStr);

@@ -2,8 +2,8 @@
 
 #include <cstdint>
 #include <windows.h>
-#include <QGL>
-
+//#include <QGL>
+#include <glad/glad.h>
 
 class GLBuffer;
 

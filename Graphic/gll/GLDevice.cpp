@@ -276,36 +276,36 @@ void GLDevice::ApplyGLBindings(const GLStates &states, bool a3) {
     for (int32_t i = 0; i < 16; ++i) {
         for (int32_t t = 0; t < 4; ++t) {
             if (this->m_States.binding.texture[t][i] != states.binding.texture[t][i] || a3) {
-                this->glActiveTexture(GL_TEXTURE0 + i);
-                this->glBindTexture(texTarget[t], states.binding.texture[t][i]);
+                glActiveTexture(GL_TEXTURE0 + i);
+                glBindTexture(texTarget[t], states.binding.texture[t][i]);
             }
         }
     }
 
-    this->glActiveTexture(GL_TEXTURE0 + states.binding.currentActiveTexture);
+    glActiveTexture(GL_TEXTURE0 + states.binding.currentActiveTexture);
 
     if (this->m_States.binding.framebuffer != states.binding.framebuffer || a3) {
-        this->glBindFramebuffer(GL_FRAMEBUFFER, states.binding.framebuffer);
+        glBindFramebuffer(GL_FRAMEBUFFER, states.binding.framebuffer);
     }
 
     if (this->m_States.binding.renderbuffer != states.binding.renderbuffer || a3) {
-        this->glBindFramebuffer(GL_RENDERBUFFER, states.binding.renderbuffer);
+        glBindFramebuffer(GL_RENDERBUFFER, states.binding.renderbuffer);
     }
 
     if (this->m_States.binding.vertexArrayObject != states.binding.vertexArrayObject || a3) {
-        this->glBindVertexArray(states.binding.vertexArrayObject);
+        glBindVertexArray(states.binding.vertexArrayObject);
     }
 
     if (this->m_States.binding.vertexProgram != states.binding.vertexProgram || a3) {
-        this->glBindProgramARB(GL_VERTEX_PROGRAM_ARB, states.binding.vertexProgram);
+        glBindProgramARB(GL_VERTEX_PROGRAM_ARB, states.binding.vertexProgram);
     }
 
     if (this->m_States.binding.pixelProgram != states.binding.pixelProgram || a3) {
-        this->glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, states.binding.pixelProgram);
+        glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, states.binding.pixelProgram);
     }
 
     if (this->m_States.binding.glslProgram != states.binding.glslProgram || a3) {
-        this->glUseProgram(states.binding.glslProgram);
+        glUseProgram(states.binding.glslProgram);
     }
 
     memcpy(&this->m_States.binding, &states.binding, sizeof(this->m_States.binding));
@@ -314,55 +314,55 @@ void GLDevice::ApplyGLBindings(const GLStates &states, bool a3) {
 void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
     if (force) {
         for (int32_t i = 0; i < 8; ++i) {
-            this->glActiveTexture(GL_TEXTURE0 + i);
+            glActiveTexture(GL_TEXTURE0 + i);
 
             float sPlane[] = {1.0, 0.0, 0.0, 0.0};
             float tPlane[] = {0.0, 1.0, 0.0, 0.0};
             float rPlane[] = {0.0, 0.0, 1.0, 0.0};
             float qPlane[] = {0.0, 0.0, 0.0, 1.0};
 
-            functions1_1->glTexGenfv(GL_S, GL_EYE_PLANE, sPlane);
-            functions1_1->glTexGenfv(GL_T, GL_EYE_PLANE, tPlane);
-            functions1_1->glTexGenfv(GL_R, GL_EYE_PLANE, rPlane);
-            functions1_1->glTexGenfv(GL_Q, GL_EYE_PLANE, qPlane);
-            functions1_1->glTexGenfv(GL_S, GL_OBJECT_PLANE, sPlane);
-            functions1_1->glTexGenfv(GL_T, GL_OBJECT_PLANE, tPlane);
-            functions1_1->glTexGenfv(GL_R, GL_OBJECT_PLANE, rPlane);
-            functions1_1->glTexGenfv(GL_Q, GL_OBJECT_PLANE, qPlane);
+            glTexGenfv(GL_S, GL_EYE_PLANE, sPlane);
+            glTexGenfv(GL_T, GL_EYE_PLANE, tPlane);
+            glTexGenfv(GL_R, GL_EYE_PLANE, rPlane);
+            glTexGenfv(GL_Q, GL_EYE_PLANE, qPlane);
+            glTexGenfv(GL_S, GL_OBJECT_PLANE, sPlane);
+            glTexGenfv(GL_T, GL_OBJECT_PLANE, tPlane);
+            glTexGenfv(GL_R, GL_OBJECT_PLANE, rPlane);
+            glTexGenfv(GL_Q, GL_OBJECT_PLANE, qPlane);
 
-            functions1_1->glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, 1);
-            functions1_1->glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
-            functions1_1->glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, (GLfloat *) &GLColor4f::WHITE);
+            glTexEnvi(GL_POINT_SPRITE, GL_COORD_REPLACE, 1);
+            glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE);
+            glTexEnvfv(GL_TEXTURE_ENV, GL_TEXTURE_ENV_COLOR, (GLfloat *) &GLColor4f::WHITE);
         }
 
-        this->glActiveTexture(GL_TEXTURE0 + states.binding.currentActiveTexture);
-        functions1_1->glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR_EXT);
-        functions1_1->glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
-        this->glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        this->glPixelStorei(GL_PACK_ALIGNMENT, 1);
+        glActiveTexture(GL_TEXTURE0 + states.binding.currentActiveTexture);
+        glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR_EXT);
+        glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, 1);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glPixelStorei(GL_PACK_ALIGNMENT, 1);
     }
 
     if (this->m_States.depth.testEnable != states.depth.testEnable || force) {
         if (states.depth.testEnable) {
-            this->glEnable(GL_DEPTH_TEST);
+            glEnable(GL_DEPTH_TEST);
         } else {
-            this->glDisable(GL_DEPTH_TEST);
+            glDisable(GL_DEPTH_TEST);
         }
     }
 
     if (this->m_States.depth.compareFunc != states.depth.compareFunc || force) {
-        this->glDepthFunc(states.depth.compareFunc);
+        glDepthFunc(states.depth.compareFunc);
     }
 
     if (this->m_States.depth.writeMask != states.depth.writeMask || force) {
-        this->glDepthMask(states.depth.writeMask);
+        glDepthMask(states.depth.writeMask);
     }
 
     if (this->m_States.stencil.testEnable != states.stencil.testEnable || force) {
         if (states.stencil.testEnable) {
-            this->glEnable(GL_STENCIL_TEST);
+            glEnable(GL_STENCIL_TEST);
         } else {
-            this->glDisable(GL_STENCIL_TEST);
+            glDisable(GL_STENCIL_TEST);
         }
     }
 
@@ -371,7 +371,7 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
         || this->m_States.stencil.ref != states.stencil.ref
         || this->m_States.stencil.mask != states.stencil.mask
         || force) {
-        this->glStencilFuncSeparate(
+        glStencilFuncSeparate(
                 states.stencil.front.compareFunc,
                 states.stencil.back.compareFunc,
                 states.stencil.ref,
@@ -383,7 +383,7 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
         || this->m_States.stencil.front.opZFail != states.stencil.front.opZFail
         || this->m_States.stencil.front.opZPass != states.stencil.front.opZPass
         || force) {
-        this->glStencilOpSeparate(
+        glStencilOpSeparate(
                 states.stencil.useTwoSidedStencil ? GL_FRONT : GL_FRONT_AND_BACK,
                 states.stencil.front.opFail,
                 states.stencil.front.opZFail,
@@ -396,7 +396,7 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
             || this->m_States.stencil.back.opZFail != states.stencil.back.opZFail
             || this->m_States.stencil.back.opZPass != states.stencil.back.opZPass
             || force) {
-            this->glStencilOpSeparate(
+            glStencilOpSeparate(
                     GL_BACK,
                     states.stencil.back.opFail,
                     states.stencil.back.opZFail,
@@ -406,24 +406,24 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
     }
 
     if (this->m_States.stencil.writeMask != states.stencil.writeMask || force) {
-        this->glStencilMask(states.stencil.writeMask);
+        glStencilMask(states.stencil.writeMask);
     }
 
     if (this->m_States.rasterizer.cullFaceMode != states.rasterizer.cullFaceMode || force) {
-        this->glCullFace(states.rasterizer.cullFaceMode);
+        glCullFace(states.rasterizer.cullFaceMode);
     }
 
     if (this->m_States.rasterizer.cullMode != states.rasterizer.cullMode || force) {
         if (states.rasterizer.cullMode != 0) {
-            this->glEnable(GL_CULL_FACE);
-            this->glFrontFace(states.rasterizer.cullMode);
+            glEnable(GL_CULL_FACE);
+            glFrontFace(states.rasterizer.cullMode);
         } else {
-            this->glDisable(GL_CULL_FACE);
+            glDisable(GL_CULL_FACE);
         }
     }
 
     if (this->m_States.rasterizer.fillMode != states.rasterizer.fillMode || force) {
-        this->functions4_5->glPolygonMode(GL_FRONT_AND_BACK, states.rasterizer.fillMode);
+        glPolygonMode(GL_FRONT_AND_BACK, states.rasterizer.fillMode);
     }
 
     if (this->m_CurrentTargetDepth
@@ -431,9 +431,9 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
             || this->m_States.rasterizer.slopeScaledDepthBias != states.rasterizer.slopeScaledDepthBias
             || force)) {
         if (states.rasterizer.slopeScaledDepthBias == 0.0 && states.rasterizer.constantDepthBias == 0.0) {
-            this->glDisable(GL_POLYGON_OFFSET_FILL);
+            glDisable(GL_POLYGON_OFFSET_FILL);
         } else {
-            this->glEnable(GL_POLYGON_OFFSET_FILL);
+            glEnable(GL_POLYGON_OFFSET_FILL);
         }
 
         float units;
@@ -446,7 +446,7 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
                     * (1 << this->m_CurrentTargetDepth->GetDepthBits());
         }
 
-        this->glPolygonOffset(states.rasterizer.slopeScaledDepthBias * 2.0, units);
+        glPolygonOffset(states.rasterizer.slopeScaledDepthBias * 2.0, units);
     }
 
     if (this->m_States.rasterizer.viewport.left != states.rasterizer.viewport.left
@@ -454,7 +454,7 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
         || this->m_States.rasterizer.viewport.width != states.rasterizer.viewport.width
         || this->m_States.rasterizer.viewport.height != states.rasterizer.viewport.height
         || force) {
-        this->glViewport(
+        glViewport(
                 states.rasterizer.viewport.left,
                 states.rasterizer.viewport.top,
                 states.rasterizer.viewport.width,
@@ -465,14 +465,14 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
     if (this->m_States.rasterizer.zNear != states.rasterizer.zNear
         || this->m_States.rasterizer.zFar != states.rasterizer.zFar
         || force) {
-        functions1_1->glDepthRange(states.rasterizer.zNear, states.rasterizer.zFar);
+        glDepthRange(states.rasterizer.zNear, states.rasterizer.zFar);
     }
 
     if (this->m_States.rasterizer.scissorEnable != states.rasterizer.scissorEnable || force) {
         if (states.rasterizer.scissorEnable) {
-            this->glEnable(GL_SCISSOR_TEST);
+            glEnable(GL_SCISSOR_TEST);
         } else {
-            this->glDisable(GL_SCISSOR_TEST);
+            glDisable(GL_SCISSOR_TEST);
         }
     }
 
@@ -481,7 +481,7 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
         || this->m_States.rasterizer.scissor.width != states.rasterizer.scissor.width
         || this->m_States.rasterizer.scissor.height != states.rasterizer.scissor.height
         || force) {
-        this->glScissor(
+        glScissor(
                 states.rasterizer.scissor.left,
                 states.rasterizer.scissor.top,
                 states.rasterizer.scissor.width,
@@ -495,9 +495,9 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
         for (int32_t i = 0; i < maxClipPlaneIndex; ++i) {
             if (!(states.rasterizer.clipPlaneMask & this->m_States.rasterizer.clipPlaneMask & (1 << i))) {
                 if ((1 << i) & states.rasterizer.clipPlaneMask) {
-                    this->glEnable(GL_CLIP_PLANE0 + i);
+                    glEnable(GL_CLIP_PLANE0 + i);
                 } else {
-                    this->glDisable(GL_CLIP_PLANE0 + i);
+                    glDisable(GL_CLIP_PLANE0 + i);
                 }
             }
         }
@@ -506,7 +506,7 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
     for (int32_t i = 0; i < maxClipPlaneIndex; ++i) {
         if (memcmp(&this->m_States.rasterizer.clipPlanes[i].plane, &states.rasterizer.clipPlanes[i].plane,
                    sizeof(this->m_States.rasterizer.clipPlanes[i].plane))) {
-            functions1_1->glClipPlane(GL_CLIP_PLANE0 + i, states.rasterizer.clipPlanes[i].plane);
+            glClipPlane(GL_CLIP_PLANE0 + i, states.rasterizer.clipPlanes[i].plane);
         }
     }
 
@@ -515,7 +515,7 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
     for (int32_t i = 0; i < maxColorMaskIndex; ++i) {
         if (memcmp(&this->m_States.blend.colorMask[i], &states.blend.colorMask[i], sizeof(GLColor4f)) || force) {
             if (GLDevice::m_ExtColorMaskIndexed) {
-                this->glColorMaski(
+                glColorMaski(
                         i,
                         states.blend.colorMask[i].red,
                         states.blend.colorMask[i].green,
@@ -523,7 +523,7 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
                         states.blend.colorMask[i].alpha
                 );
             } else {
-                this->glColorMask(
+                glColorMask(
                         states.blend.colorMask[i].red,
                         states.blend.colorMask[i].green,
                         states.blend.colorMask[i].blue,
@@ -535,24 +535,24 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
 
     if (this->m_States.blend.alphaBlend != states.blend.alphaBlend || force) {
         if (states.blend.alphaBlend) {
-            this->glEnable(GL_BLEND);
+            glEnable(GL_BLEND);
         } else {
-            this->glDisable(GL_BLEND);
+            glDisable(GL_BLEND);
         }
     }
 
     if (this->m_States.blend.srcBlendFactor != states.blend.srcBlendFactor
         || this->m_States.blend.destBlendFactor != states.blend.destBlendFactor
         || force) {
-        this->glBlendFunc(states.blend.srcBlendFactor, states.blend.destBlendFactor);
+        glBlendFunc(states.blend.srcBlendFactor, states.blend.destBlendFactor);
     }
 
     if (this->m_States.blend.blendOp != states.blend.blendOp || force) {
-        this->glBlendEquation(states.blend.blendOp);
+        glBlendEquation(states.blend.blendOp);
     }
 
     if (memcmp(&this->m_States.blend.blendColor, &states.blend.blendColor, sizeof(GLColor4f)) || force) {
-        this->glBlendColor(
+        glBlendColor(
                 states.blend.blendColor.r,
                 states.blend.blendColor.g,
                 states.blend.blendColor.b,
@@ -562,56 +562,56 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
 
     if (this->m_States.fixedFunc.fogEnable != states.fixedFunc.fogEnable) {
         if (states.fixedFunc.fogEnable) {
-            this->glEnable(GL_FOG);
+            glEnable(GL_FOG);
         } else {
-            this->glDisable(GL_FOG);
+            glDisable(GL_FOG);
         }
     }
 
     if (memcmp(&this->m_States.fixedFunc.fogColor, &states.fixedFunc.fogColor, sizeof(GLColor4f)) || force) {
-        functions1_1->glFogfv(GL_FOG_COLOR, (GLfloat *) &states.fixedFunc.fogColor);
+        glFogfv(GL_FOG_COLOR, (GLfloat *) &states.fixedFunc.fogColor);
     }
 
     if (this->m_States.fixedFunc.fogMode != states.fixedFunc.fogMode || force) {
-        functions1_1->glFogi(GL_FOG_MODE, states.fixedFunc.fogMode);
+        glFogi(GL_FOG_MODE, states.fixedFunc.fogMode);
     }
 
     if (this->m_States.fixedFunc.fogStart != states.fixedFunc.fogStart || force) {
-        functions1_1->glFogf(GL_FOG_START, states.fixedFunc.fogStart);
+        glFogf(GL_FOG_START, states.fixedFunc.fogStart);
     }
 
     if (this->m_States.fixedFunc.fogEnd != states.fixedFunc.fogEnd || force) {
-        functions1_1->glFogf(GL_FOG_END, states.fixedFunc.fogEnd);
+        glFogf(GL_FOG_END, states.fixedFunc.fogEnd);
     }
 
     if (this->m_States.fixedFunc.fogDensity != states.fixedFunc.fogDensity || force) {
-        functions1_1->glFogf(GL_FOG_DENSITY, states.fixedFunc.fogDensity);
+        glFogf(GL_FOG_DENSITY, states.fixedFunc.fogDensity);
     }
 
     if (this->m_States.fixedFunc.alphaTestEnable != states.fixedFunc.alphaTestEnable || force) {
         if (states.fixedFunc.alphaTestEnable) {
-            this->glEnable(GL_ALPHA_TEST);
+            glEnable(GL_ALPHA_TEST);
         } else {
-            this->glDisable(GL_ALPHA_TEST);
+            glDisable(GL_ALPHA_TEST);
         }
     }
 
     if (this->m_States.fixedFunc.alphaTestFunc != states.fixedFunc.alphaTestFunc
         || this->m_States.fixedFunc.alphaTestRef != states.fixedFunc.alphaTestRef
         || force) {
-        functions1_1->glAlphaFunc(states.fixedFunc.alphaTestFunc, states.fixedFunc.alphaTestRef);
+        glAlphaFunc(states.fixedFunc.alphaTestFunc, states.fixedFunc.alphaTestRef);
     }
 
     if (this->m_States.fixedFunc.transforms.modelView.isIdentity != states.fixedFunc.transforms.modelView.isIdentity
         || memcmp(this->m_States.fixedFunc.transforms.modelView.m, states.fixedFunc.transforms.modelView.m,
                   sizeof(float) * 16)
         || force) {
-        functions1_1->glMatrixMode(GL_MODELVIEW);
+        glMatrixMode(GL_MODELVIEW);
 
         if (states.fixedFunc.transforms.modelView.isIdentity) {
-            functions1_1->glLoadIdentity();
+            glLoadIdentity();
         } else {
-            functions1_1->glLoadMatrixf(states.fixedFunc.transforms.modelView.m);
+            glLoadMatrixf(states.fixedFunc.transforms.modelView.m);
         }
 
         const_cast<GLStates &>(states).fixedFunc.transforms.modelView.isDirty = false;
@@ -621,7 +621,7 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
         || memcmp(this->m_States.fixedFunc.transforms.projection.m, states.fixedFunc.transforms.projection.m,
                   sizeof(float) * 16)
         || force) {
-        functions1_1->glMatrixMode(GL_PROJECTION);
+        glMatrixMode(GL_PROJECTION);
 
         GLTransform projection = {
                 true,
@@ -670,30 +670,30 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
         projection.isDirty = true;
 
         if (isIdentity) {
-            functions1_1->glLoadIdentity();
+            glLoadIdentity();
         } else {
-            functions1_1->glLoadMatrixf(projection.m);
+            glLoadMatrixf(projection.m);
         }
 
         projection.isDirty = false;
     }
 
-    functions1_1->glMatrixMode(states.fixedFunc.transforms.matrixMode);
-    functions1_1->glMatrixMode(GL_MODELVIEW);
+    glMatrixMode(states.fixedFunc.transforms.matrixMode);
+    glMatrixMode(GL_MODELVIEW);
 
     if (states.fixedFunc.transforms.view.isIdentity) {
-        functions1_1->glLoadIdentity();
+        glLoadIdentity();
     } else {
-        functions1_1->glLoadMatrixf(states.fixedFunc.transforms.view.m);
+        glLoadMatrixf(states.fixedFunc.transforms.view.m);
     }
 
     const_cast<GLStates &>(states).fixedFunc.transforms.view.isDirty = false;
 
     if (this->m_States.fixedFunc.lighting.enable != states.fixedFunc.lighting.enable || force) {
         if (states.fixedFunc.lighting.enable) {
-            this->glEnable(GL_LIGHTING);
+            glEnable(GL_LIGHTING);
         } else {
-            this->glDisable(GL_LIGHTING);
+            glDisable(GL_LIGHTING);
         }
     }
 
@@ -704,12 +704,12 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
 
     if (memcmp(&this->m_States.fixedFunc.lighting.sceneAmbient, &states.fixedFunc.lighting.sceneAmbient,
                sizeof(GLColor4f)) || force) {
-        functions1_1->glLightModelfv(GL_LIGHT_MODEL_AMBIENT, (GLfloat *) &states.fixedFunc.lighting.sceneAmbient);
+        glLightModelfv(GL_LIGHT_MODEL_AMBIENT, (GLfloat *) &states.fixedFunc.lighting.sceneAmbient);
     }
 
     if (this->m_States.fixedFunc.lighting.material.materialSource !=
         states.fixedFunc.lighting.material.materialSource || force) {
-        functions1_1->glColorMaterial(GL_FRONT_AND_BACK, states.fixedFunc.lighting.material.materialSource);
+        glColorMaterial(GL_FRONT_AND_BACK, states.fixedFunc.lighting.material.materialSource);
 
         // TODO
         // this->Sub38A20();
@@ -718,9 +718,9 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
     if (this->m_States.fixedFunc.lighting.material.colorTracking != states.fixedFunc.lighting.material.colorTracking ||
         force) {
         if (states.fixedFunc.lighting.material.colorTracking) {
-            this->glEnable(GL_COLOR_MATERIAL);
+            glEnable(GL_COLOR_MATERIAL);
         } else {
-            this->glDisable(GL_COLOR_MATERIAL);
+            glDisable(GL_COLOR_MATERIAL);
         }
 
         // TODO
@@ -729,30 +729,30 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
 
     if (memcmp(&this->m_States.fixedFunc.lighting.material.ambient, &states.fixedFunc.lighting.material.ambient,
                sizeof(GLColor4f)) || force) {
-        functions1_1->glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,
+        glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT,
                                    (GLfloat *) &states.fixedFunc.lighting.material.ambient);
     }
 
     if (memcmp(&this->m_States.fixedFunc.lighting.material.diffuse, &states.fixedFunc.lighting.material.diffuse,
                sizeof(GLColor4f)) || force) {
-        functions1_1->glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,
+        glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE,
                                    (GLfloat *) &states.fixedFunc.lighting.material.diffuse);
     }
 
     if (memcmp(&this->m_States.fixedFunc.lighting.material.specular, &states.fixedFunc.lighting.material.specular,
                sizeof(GLColor4f)) || force) {
-        functions1_1->glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR,
                                    (GLfloat *) &states.fixedFunc.lighting.material.specular);
     }
 
     if (memcmp(&this->m_States.fixedFunc.lighting.material.emission, &states.fixedFunc.lighting.material.emission,
                sizeof(GLColor4f)) || force) {
-        functions1_1->glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION,
+        glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION,
                                    (GLfloat *) &states.fixedFunc.lighting.material.emission);
     }
 
     if (this->m_States.fixedFunc.lighting.material.shininess != states.fixedFunc.lighting.material.shininess || force) {
-        functions1_1->glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, states.fixedFunc.lighting.material.shininess);
+        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, states.fixedFunc.lighting.material.shininess);
     }
 
     for (int32_t i = 0; i < 8; ++i) {
@@ -761,67 +761,67 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
         // TODO fixedFunc.texGen[i]
     }
 
-    functions1_1->glMatrixMode(states.fixedFunc.transforms.matrixMode);
+    glMatrixMode(states.fixedFunc.transforms.matrixMode);
 
     if (this->m_States.fixedFunc.normalizeNormal != states.fixedFunc.normalizeNormal) {
         if (states.fixedFunc.normalizeNormal) {
-            this->glEnable(GL_NORMALIZE);
+            glEnable(GL_NORMALIZE);
         } else {
-            this->glDisable(GL_NORMALIZE);
+            glDisable(GL_NORMALIZE);
         }
     }
 
     if (this->m_States.fixedFunc.pointSprite.enable != states.fixedFunc.pointSprite.enable || force) {
         if (states.fixedFunc.pointSprite.enable) {
-            this->glEnable(GL_POINT_SPRITE);
-            this->glEnable(GL_PROGRAM_POINT_SIZE_EXT);
+            glEnable(GL_POINT_SPRITE);
+            glEnable(GL_PROGRAM_POINT_SIZE_EXT);
         } else {
-            this->glDisable(GL_POINT_SPRITE);
-            this->glDisable(GL_PROGRAM_POINT_SIZE_EXT);
+            glDisable(GL_POINT_SPRITE);
+            glDisable(GL_PROGRAM_POINT_SIZE_EXT);
         }
     }
 
     if (this->m_States.fixedFunc.pointSprite.size != states.fixedFunc.pointSprite.size || force) {
-        functions1_1->glPointSize(states.fixedFunc.pointSprite.size);
+        glPointSize(states.fixedFunc.pointSprite.size);
     }
 
     if (memcmp(&this->m_States.fixedFunc.pointSprite.attenuation, &states.fixedFunc.pointSprite.attenuation,
                sizeof(this->m_States.fixedFunc.pointSprite.attenuation)) || force) {
-        this->functions4_5->glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, states.fixedFunc.pointSprite.attenuation);
+        glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, states.fixedFunc.pointSprite.attenuation);
     }
 
     if (this->m_States.fixedFunc.pointSprite.min != states.fixedFunc.pointSprite.min || force) {
-        this->functions4_5->glPointParameterf(GL_POINT_SIZE_MIN, states.fixedFunc.pointSprite.min);
+        glPointParameterf(GL_POINT_SIZE_MIN, states.fixedFunc.pointSprite.min);
     }
 
     if (this->m_States.fixedFunc.pointSprite.max != states.fixedFunc.pointSprite.max || force) {
-        this->functions4_5->glPointParameterf(GL_POINT_SIZE_MAX, states.fixedFunc.pointSprite.max);
+        glPointParameterf(GL_POINT_SIZE_MAX, states.fixedFunc.pointSprite.max);
     }
 
     if (this->m_States.shader.vertexShaderEnable != states.shader.vertexShaderEnable || force) {
         if (states.shader.vertexShaderEnable) {
-            this->glEnable(GL_VERTEX_PROGRAM_ARB);
+            glEnable(GL_VERTEX_PROGRAM_ARB);
         } else {
-            this->glDisable(GL_VERTEX_PROGRAM_ARB);
+            glDisable(GL_VERTEX_PROGRAM_ARB);
         }
     }
 
-    this->glProgramEnvParameters4fvEXT(GL_VERTEX_PROGRAM_ARB, 0, 256,
+    glProgramEnvParameters4fvEXT(GL_VERTEX_PROGRAM_ARB, 0, 256,
                                        (GLfloat *) states.shader.vertexShaderConst);
 
     if (this->m_States.shader.pixelShaderEnable != states.shader.pixelShaderEnable || force) {
         if (states.shader.pixelShaderEnable) {
-            this->glEnable(GL_FRAGMENT_PROGRAM_ARB);
+            glEnable(GL_FRAGMENT_PROGRAM_ARB);
         } else {
-            this->glDisable(GL_FRAGMENT_PROGRAM_ARB);
+            glDisable(GL_FRAGMENT_PROGRAM_ARB);
         }
     }
 
-    this->glProgramEnvParameters4fvEXT(GL_FRAGMENT_PROGRAM_ARB, 0, 64,
+    glProgramEnvParameters4fvEXT(GL_FRAGMENT_PROGRAM_ARB, 0, 64,
                                        (GLfloat *) states.shader.pixelShaderConst);
 
     if (memcmp(&this->m_States.clear.clearColor, &states.clear.clearColor, sizeof(GLColor4f)) || force) {
-        this->glClearColor(
+        glClearColor(
                 states.clear.clearColor.r,
                 states.clear.clearColor.g,
                 states.clear.clearColor.b,
@@ -830,11 +830,11 @@ void GLDevice::ApplyGLStates(const GLStates &states, bool force) {
     }
 
     if (this->m_States.clear.clearDepth != states.clear.clearDepth || force) {
-        this->glClearDepthf(states.clear.clearDepth);
+        glClearDepthf(states.clear.clearDepth);
     }
 
     if (this->m_States.clear.clearStencil != states.clear.clearStencil || force) {
-        this->glClearStencil(states.clear.clearStencil);
+        glClearStencil(states.clear.clearStencil);
     }
 
     // Copy provided states into current states
@@ -920,7 +920,7 @@ void GLDevice::ApplyShaderConstants() {
             auto end = this->m_DirtyVertexShaderConsts.end;
 
             if (start != end) {
-                this->glProgramEnvParameters4fvEXT(
+                glProgramEnvParameters4fvEXT(
                         GL_VERTEX_PROGRAM_ARB,
                         start,
                         end - start,
@@ -943,7 +943,7 @@ void GLDevice::ApplyShaderConstants() {
             auto end = this->m_DirtyPixelShaderConsts.end;
 
             if (start != end) {
-                this->glProgramEnvParameters4fvEXT(
+                glProgramEnvParameters4fvEXT(
                         GL_FRAGMENT_PROGRAM_ARB,
                         start,
                         end - start,
@@ -991,14 +991,14 @@ void GLDevice::ApplyTransforms() {
         projection.isDirty = true;
 
         if (this->m_States.fixedFunc.transforms.matrixMode != GL_PROJECTION) {
-            functions1_1->glMatrixMode(GL_PROJECTION);
+            glMatrixMode(GL_PROJECTION);
             this->m_States.fixedFunc.transforms.matrixMode = GL_PROJECTION;
         }
 
         if (projection.isIdentity) {
-            functions1_1->glLoadIdentity();
+            glLoadIdentity();
         } else {
-            functions1_1->glLoadMatrixf(projection.m);
+            glLoadMatrixf(projection.m);
         }
 
         projection.isDirty = false;
@@ -1031,7 +1031,7 @@ void GLDevice::BindBuffer(GLBuffer *buffer, GLEnum target) {
     if (bindTarget == GL_ARRAY_BUFFER) {
         if (this->m_States.binding.vertexArrayObject &&
             this->m_VertexArrayObject != &this->m_DefaultVertexArrayObject) {
-            this->glBindVertexArray(0);
+            glBindVertexArray(0);
             this->m_States.binding.vertexArrayObject = 0;
             this->m_VertexArrayObject = &this->m_DefaultVertexArrayObject;
         }
@@ -1042,7 +1042,7 @@ void GLDevice::BindBuffer(GLBuffer *buffer, GLEnum target) {
     }
 
     if (this->m_VertexArrayObject->m_GLStates.buffers[bindIndex] != bindName) {
-        this->glBindBuffer(bindTarget, bindName);
+        glBindBuffer(bindTarget, bindName);
         this->m_VertexArrayObject->m_GLStates.buffers[bindIndex] = bindName;
     }
 }
@@ -1061,7 +1061,7 @@ void GLDevice::BindFramebuffer(GLFramebuffer *framebuffer) {
     this->m_CurrentTarget = framebuffer;
 
     if (this->m_States.binding.framebuffer != v3) {
-        this->glBindFramebuffer(GL_FRAMEBUFFER, v3);
+        glBindFramebuffer(GL_FRAMEBUFFER, v3);
         this->m_States.binding.framebuffer = v3;
     }
 }
@@ -1076,12 +1076,12 @@ void GLDevice::BindShader(GLShader *shader) {
 
     if (shader->var5 == GL_FRAGMENT_PROGRAM_ARB) {
         if (this->m_States.binding.pixelProgram != shader->m_ShaderID) {
-            this->glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, shader->m_ShaderID);
+            glBindProgramARB(GL_FRAGMENT_PROGRAM_ARB, shader->m_ShaderID);
             this->m_States.binding.pixelProgram = shader->m_ShaderID;
         }
     } else if (shader->var5 == GL_VERTEX_PROGRAM_ARB) {
         if (this->m_States.binding.vertexProgram != shader->m_ShaderID) {
-            this->glBindProgramARB(GL_VERTEX_PROGRAM_ARB, shader->m_ShaderID);
+            glBindProgramARB(GL_VERTEX_PROGRAM_ARB, shader->m_ShaderID);
             this->m_States.binding.vertexProgram = shader->m_ShaderID;
         }
     } else {
@@ -1104,7 +1104,7 @@ void GLDevice::BindTexture(GLEnum textureType, GLTexture *texture) {
         boundTexture->Unbind(this, this->m_States.binding.currentActiveTexture);
     }
 
-    this->glBindTexture(textureType, textureID);
+    glBindTexture(textureType, textureID);
     this->m_BoundTextures[index][this->m_States.binding.currentActiveTexture] = texture;
     this->m_States.binding.texture[index][this->m_States.binding.currentActiveTexture] = textureID;
 
@@ -1146,7 +1146,7 @@ void GLDevice::BindVertexArray(GLVertexArray *a2) {
     int32_t v4 = a2 ? a2->m_VertexArrayID : 0;
 
     if (this->m_States.binding.vertexArrayObject != v4) {
-        this->glBindVertexArray(v4);
+        glBindVertexArray(v4);
         this->m_States.binding.vertexArrayObject = v4;
         this->m_VertexArrayObject = a2 ? a2 : &this->m_DefaultVertexArrayObject;
     }
@@ -1178,8 +1178,8 @@ void GLDevice::BlitFramebuffer(GLMipmap *src, const GLRect *srcRect, GLMipmap *d
     // TODO
     // - non-shader code path
 
-    this->glEnable(GL_VERTEX_PROGRAM_ARB);
-    this->glEnable(GL_FRAGMENT_PROGRAM_ARB);
+    glEnable(GL_VERTEX_PROGRAM_ARB);
+    glEnable(GL_FRAGMENT_PROGRAM_ARB);
 
     auto alphaTestEnable = this->m_States.fixedFunc.alphaTestEnable;
     auto depthTestEnable = this->m_States.depth.testEnable;
@@ -1191,37 +1191,37 @@ void GLDevice::BlitFramebuffer(GLMipmap *src, const GLRect *srcRect, GLMipmap *d
     uint32_t height;
 
     if (alphaTestEnable) {
-        this->glDisable(GL_ALPHA_TEST);
+        glDisable(GL_ALPHA_TEST);
     }
 
     if (depthTestEnable) {
-        this->glDisable(GL_DEPTH_TEST);
+        glDisable(GL_DEPTH_TEST);
     }
 
     if (alphaBlend) {
-        this->glDisable(GL_BLEND);
+        glDisable(GL_BLEND);
     }
 
     if (cullEnable) {
-        this->glDisable(GL_CULL_FACE);
+        glDisable(GL_CULL_FACE);
     }
 
     if (scissorEnable) {
-        this->glDisable(GL_SCISSOR_TEST);
+        glDisable(GL_SCISSOR_TEST);
     }
 
     if (stencilTestEnable) {
-        this->glDisable(GL_STENCIL_TEST);
+        glDisable(GL_STENCIL_TEST);
     }
 
     if (GLDevice::m_ExtColorMaskIndexed) {
-        this->glColorMaski(0, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+        glColorMaski(0, GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     } else {
-        this->glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+        glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
     }
 
     if (dst) {
-        this->glFramebufferTexture2D(
+        glFramebufferTexture2D(
                 GL_FRAMEBUFFER,
                 GL_COLOR_ATTACHMENT0,
                 dst->m_Target,
@@ -1231,7 +1231,7 @@ void GLDevice::BlitFramebuffer(GLMipmap *src, const GLRect *srcRect, GLMipmap *d
 
         auto currentTargetDepth = this->m_CurrentTargetDepth;
         if (currentTargetDepth) {
-            this->glFramebufferTexture2D(
+            glFramebufferTexture2D(
                     GL_FRAMEBUFFER,
                     GL_DEPTH_ATTACHMENT,
                     currentTargetDepth->m_Target,
@@ -1242,7 +1242,7 @@ void GLDevice::BlitFramebuffer(GLMipmap *src, const GLRect *srcRect, GLMipmap *d
 
         auto currentTargetStencil = this->m_CurrentTargetStencil;
         if (currentTargetStencil) {
-            this->glFramebufferTexture2D(
+            glFramebufferTexture2D(
                     GL_FRAMEBUFFER,
                     GL_STENCIL_ATTACHMENT,
                     currentTargetStencil->m_Target,
@@ -1259,7 +1259,7 @@ void GLDevice::BlitFramebuffer(GLMipmap *src, const GLRect *srcRect, GLMipmap *d
         width = dst->m_Width;
         height = dst->m_Height;
     } else {
-        this->glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
         width = GLContext::GetCurrentGLContext()->GetBackingWidth();
         height = GLContext::GetCurrentGLContext()->GetBackingHeight();
@@ -1271,7 +1271,7 @@ void GLDevice::BlitFramebuffer(GLMipmap *src, const GLRect *srcRect, GLMipmap *d
             || this->m_States.rasterizer.viewport.width != width
             || this->m_States.rasterizer.viewport.height != height
             ) {
-        this->glViewport(0, 0, width, height);
+        glViewport(0, 0, width, height);
     }
 
     this->SetActiveTexture(0);
@@ -1299,37 +1299,37 @@ void GLDevice::BlitFramebuffer(GLMipmap *src, const GLRect *srcRect, GLMipmap *d
     this->m_DefaultVertexArrayObject.m_Properties.m_VertexBase = 0;
     GLVertexArray::FindVertexArray(this, this->m_DefaultVertexArrayObject);
 
-    this->glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
     this->SetShader(GLShader::eVertexShader, vertexShader);
     this->SetShader(GLShader::ePixelShader, pixelShader);
 
     if (alphaTestEnable) {
-        this->glEnable(GL_ALPHA_TEST);
+        glEnable(GL_ALPHA_TEST);
     }
 
     if (depthTestEnable) {
-        this->glEnable(GL_DEPTH_TEST);
+        glEnable(GL_DEPTH_TEST);
     }
 
     if (alphaBlend) {
-        this->glEnable(GL_BLEND);
+        glEnable(GL_BLEND);
     }
 
     if (cullEnable) {
-        this->glEnable(GL_CULL_FACE);
+        glEnable(GL_CULL_FACE);
     }
 
     if (scissorEnable) {
-        this->glEnable(GL_SCISSOR_TEST);
+        glEnable(GL_SCISSOR_TEST);
     }
 
     if (stencilTestEnable) {
-        this->glEnable(GL_STENCIL_TEST);
+        glEnable(GL_STENCIL_TEST);
     }
 
     if (GLDevice::m_ExtColorMaskIndexed) {
-        this->glColorMaski(
+        glColorMaski(
                 0,
                 this->m_States.blend.colorMask[0].red,
                 this->m_States.blend.colorMask[0].green,
@@ -1337,7 +1337,7 @@ void GLDevice::BlitFramebuffer(GLMipmap *src, const GLRect *srcRect, GLMipmap *d
                 this->m_States.blend.colorMask[0].alpha
         );
     } else {
-        this->glColorMask(
+        glColorMask(
                 this->m_States.blend.colorMask[0].red,
                 this->m_States.blend.colorMask[0].green,
                 this->m_States.blend.colorMask[0].blue,
@@ -1347,7 +1347,7 @@ void GLDevice::BlitFramebuffer(GLMipmap *src, const GLRect *srcRect, GLMipmap *d
 
     if (dst) {
         auto currentTargetColor = this->m_CurrentTargetColor[0];
-        this->glFramebufferTexture2D(
+        glFramebufferTexture2D(
                 GL_FRAMEBUFFER,
                 GL_COLOR_ATTACHMENT0,
                 dst->m_Target,
@@ -1357,7 +1357,7 @@ void GLDevice::BlitFramebuffer(GLMipmap *src, const GLRect *srcRect, GLMipmap *d
 
         auto currentTargetDepth = this->m_CurrentTargetDepth;
         if (currentTargetDepth) {
-            this->glFramebufferTexture2D(
+            glFramebufferTexture2D(
                     GL_FRAMEBUFFER,
                     GL_DEPTH_ATTACHMENT,
                     currentTargetDepth->m_Target,
@@ -1368,7 +1368,7 @@ void GLDevice::BlitFramebuffer(GLMipmap *src, const GLRect *srcRect, GLMipmap *d
 
         auto currentTargetStencil = this->m_CurrentTargetStencil;
         if (currentTargetStencil) {
-            this->glFramebufferTexture2D(
+            glFramebufferTexture2D(
                     GL_FRAMEBUFFER,
                     GL_STENCIL_ATTACHMENT,
                     currentTargetStencil->m_Target,
@@ -1384,7 +1384,7 @@ void GLDevice::BlitFramebuffer(GLMipmap *src, const GLRect *srcRect, GLMipmap *d
             || this->m_States.rasterizer.viewport.width != width
             || this->m_States.rasterizer.viewport.height != height
             ) {
-        this->glViewport(
+        glViewport(
                 this->m_States.rasterizer.viewport.left,
                 this->m_States.rasterizer.viewport.top,
                 this->m_States.rasterizer.viewport.width,
@@ -1606,7 +1606,7 @@ void GLDevice::Draw(GLEnum primitive, uint32_t a3, uint32_t a4) {
 }
 
 void GLDevice::DrawIndexed(GLEnum primitive, uint32_t a3, uint32_t a4, uint32_t a5, uint32_t a6, uint32_t count) {
-    this->GLLDraw(primitive, a3, a4, a5, a6, count);
+    GLLDraw(primitive, a3, a4, a5, a6, count);
 }
 
 void GLDevice::DrawRect() {
@@ -1624,14 +1624,14 @@ void GLDevice::DrawRect() {
         GLMipmap *backBufferImage = backBuffer->GetMipmap(0, GL_TEXTURE_CUBE_MAP_POSITIVE_X);
         this->BlitFramebuffer(backBufferImage, nullptr, nullptr, nullptr, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
-        this->glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
         this->m_States.binding.framebuffer = 0;
     }
 
     this->m_Context->Swap();
 
     if (!this->m_UseWindowSystemBuffer || this->m_FlippedSystemBuffer) {
-        this->glBindFramebuffer(GL_FRAMEBUFFER, this->m_CurrentTarget->m_FramebufferID);
+        glBindFramebuffer(GL_FRAMEBUFFER, this->m_CurrentTarget->m_FramebufferID);
         this->m_States.binding.framebuffer = this->m_CurrentTarget->m_FramebufferID;
     }
 }
@@ -1665,7 +1665,7 @@ void GLDevice::GLLDraw(GLEnum mode, uint32_t start, uint32_t end, uint32_t a5, u
 
     if (!this->m_DrawCount) {
         if (this->m_Context->m_MTGLEnabled) {
-            this->glFlush();
+            glFlush();
         }
 
         // GLFence::TestFences();
@@ -1728,9 +1728,9 @@ void GLDevice::GLLDraw(GLEnum mode, uint32_t start, uint32_t end, uint32_t a5, u
                         ? reinterpret_cast<void *>(a6 << v18)
                         : buffer->m_Data + (a6 << v18);
 
-        this->glDrawRangeElements(mode, start, end, count, buffer->m_IndexFormat, indices);
+        glDrawRangeElements(mode, start, end, count, buffer->m_IndexFormat, indices);
     } else {
-        this->glDrawArrays(mode, start, end - start);
+        glDrawArrays(mode, start, end - start);
     }
 }
 
@@ -1740,18 +1740,18 @@ void GLDevice::Init(GLAbstractWindow *a2, const char *a3, uint32_t a4, GLTexture
         return;
     }
     this->m_Context->MakeCurrent(true);
-    initializeOpenGLFunctions();
+    // initializeOpenGLFunctions();
 
 // 使用 QOpenGLContext 获取函数指针
-    glBindProgramARB =
-            (PFNGLBINDPROGRAMARBPROC) QOpenGLContext::currentContext()->getProcAddress("glBindProgramARB");
-    glGenProgramsARB =
-            (PFNGLGENPROGRAMSARBPROC) QOpenGLContext::currentContext()->getProcAddress("glGenProgramsARB");
-    glProgramStringARB =
-            (PFNGLPROGRAMSTRINGARBPROC) QOpenGLContext::currentContext()->getProcAddress("glProgramStringARB");
-    glProgramEnvParameters4fvEXT =
-            reinterpret_cast<PFNGLPROGRAMENVPARAMETERS4FVEXTPROC>(
-                    QOpenGLContext::currentContext()->getProcAddress("glProgramEnvParameters4fvEXT"));
+//    glBindProgramARB =
+//            (PFNGLBINDPROGRAMARBPROC) QOpenGLContext::currentContext()->getProcAddress("glBindProgramARB");
+//    glGenProgramsARB =
+//            (PFNGLGENPROGRAMSARBPROC) QOpenGLContext::currentContext()->getProcAddress("glGenProgramsARB");
+//    glProgramStringARB =
+//            (PFNGLPROGRAMSTRINGARBPROC) QOpenGLContext::currentContext()->getProcAddress("glProgramStringARB");
+//    glProgramEnvParameters4fvEXT =
+//            reinterpret_cast<PFNGLPROGRAMENVPARAMETERS4FVEXTPROC>(
+//                    QOpenGLContext::currentContext()->getProcAddress("glProgramEnvParameters4fvEXT"));
 
     System_Autorelease::ScopedPool autorelease;
 
@@ -1790,7 +1790,7 @@ void GLDevice::Init(GLAbstractWindow *a2, const char *a3, uint32_t a4, GLTexture
     }
 
     if (!GLDevice::m_StaticResourcesRefCount) {
-        GLContext::s_MainContext = this->m_Context->m_Context;
+       // GLContext::s_MainContext = this->m_Context->m_Context;
         GLDevice::InitPools();
         GLDevice::StaticInit();
     }
@@ -1802,8 +1802,8 @@ void GLDevice::Init(GLAbstractWindow *a2, const char *a3, uint32_t a4, GLTexture
         this->m_TexWorker = v11;
     }
 
-    this->glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    this->glClear(GL_COLOR_BUFFER_BIT);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glClear(GL_COLOR_BUFFER_BIT);
 
     GLFramebuffer *v12 = GLFramebuffer::Create(0);
     this->m_FBOTarget = v12;
@@ -1825,7 +1825,7 @@ void GLDevice::Init(GLAbstractWindow *a2, const char *a3, uint32_t a4, GLTexture
     }
 
     if (this->m_States.binding.framebuffer != v15) {
-        this->glBindFramebuffer(GL_FRAMEBUFFER, v15);
+        glBindFramebuffer(GL_FRAMEBUFFER, v15);
         this->m_States.binding.framebuffer = v15;
     }
 }
@@ -2163,16 +2163,16 @@ void GLDevice::Resize(uint32_t width, uint32_t height) {
     auto colorFormat = this->m_BackBufferColor ? this->m_BackBufferColor->m_Format : GLTF_INVALID;
     auto depthFormat = this->m_BackBufferDepth ? this->m_BackBufferDepth->m_Format : GLTF_INVALID;
 
-    this->SetDisplay(
-            width,
-            height,
-            colorFormat,
-            depthFormat,
-            this->m_Context->m_RefreshRate,
-            this->m_Context->m_Windowed,
-            this->m_Context->m_CaptureDisplay,
-            this->m_Context->m_Context->sampleCount
-    );
+//    this->SetDisplay(
+//            width,
+//            height,
+//            colorFormat,
+//            depthFormat,
+//            this->m_Context->m_RefreshRate,
+//            this->m_Context->m_Windowed,
+//            this->m_Context->m_CaptureDisplay,
+//            this->m_Context->m_Context->sampleCount
+//    );
 }
 
 void GLDevice::RestoreTextures() {
@@ -2191,20 +2191,20 @@ void GLDevice::RestoreTextures() {
 
 void GLDevice::SetActiveTexture(uint32_t a2) {
     if (this->m_States.binding.currentActiveTexture != a2) {
-        this->glActiveTexture(GL_TEXTURE0 + a2);
+        glActiveTexture(GL_TEXTURE0 + a2);
         this->m_States.binding.currentActiveTexture = a2;
     }
 }
 
 void GLDevice::SetAlphaBlend(GLEnum srcBlend, GLEnum dstBlend, GLEnum blendOp) {
     if (this->m_States.blend.srcBlendFactor != srcBlend || this->m_States.blend.destBlendFactor != dstBlend) {
-        this->glBlendFunc(srcBlend, dstBlend);
+        glBlendFunc(srcBlend, dstBlend);
         this->m_States.blend.srcBlendFactor = srcBlend;
         this->m_States.blend.destBlendFactor = dstBlend;
     }
 
     if (this->m_States.blend.blendOp != blendOp) {
-        this->glBlendEquation(blendOp);
+        glBlendEquation(blendOp);
         this->m_States.blend.blendOp = blendOp;
     }
 }
@@ -2212,9 +2212,9 @@ void GLDevice::SetAlphaBlend(GLEnum srcBlend, GLEnum dstBlend, GLEnum blendOp) {
 void GLDevice::SetAlphaBlendEnable(bool enable) {
     if (this->m_States.blend.alphaBlend != enable) {
         if (enable) {
-            this->glEnable(GL_BLEND);
+            glEnable(GL_BLEND);
         } else {
-            this->glDisable(GL_BLEND);
+            glDisable(GL_BLEND);
         }
 
         this->m_States.blend.alphaBlend = enable;
@@ -2225,7 +2225,7 @@ void GLDevice::SetAlphaTest(GLEnum func, float ref) {
     if (this->m_States.fixedFunc.alphaTestFunc != func || this->m_States.fixedFunc.alphaTestRef != ref) {
         BLIZZARD_ASSERT(ref <= 1.0f);
 
-        functions1_1->glAlphaFunc(func, ref);
+        glAlphaFunc(func, ref);
         this->m_States.fixedFunc.alphaTestFunc = func;
         this->m_States.fixedFunc.alphaTestRef = ref;
     }
@@ -2234,9 +2234,9 @@ void GLDevice::SetAlphaTest(GLEnum func, float ref) {
 void GLDevice::SetAlphaTestEnable(bool enable) {
     if (this->m_States.fixedFunc.alphaTestEnable != enable) {
         if (enable) {
-            this->glEnable(GL_ALPHA_TEST);
+            glEnable(GL_ALPHA_TEST);
         } else {
-            this->glDisable(GL_ALPHA_TEST);
+            glDisable(GL_ALPHA_TEST);
         }
     }
 }
@@ -2248,21 +2248,21 @@ void GLDevice::SetClearColor(const GLColor4f &clearColor) {
             || this->m_States.clear.clearColor.b != clearColor.b
             || this->m_States.clear.clearColor.a != clearColor.a
             ) {
-        this->glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
+        glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a);
         this->m_States.clear.clearColor = {clearColor.r, clearColor.g, clearColor.b, clearColor.a};
     }
 }
 
 void GLDevice::SetClearDepth(double clearDepth) {
     if (this->m_States.clear.clearDepth != clearDepth) {
-        this->glClearDepthf(clearDepth);
+        glClearDepthf(clearDepth);
         this->m_States.clear.clearDepth = clearDepth;
     }
 }
 
 void GLDevice::SetClearStencil(int32_t clearStencil) {
     if (this->m_States.clear.clearStencil != clearStencil) {
-        this->glClearStencil(clearStencil);
+        glClearStencil(clearStencil);
         this->m_States.clear.clearStencil = clearStencil;
     }
 }
@@ -2275,9 +2275,9 @@ void GLDevice::SetColorWriteMask(bool red, bool green, bool blue, bool alpha, ui
             || this->m_States.blend.colorMask[index].alpha != alpha
             ) {
         if (GLDevice::m_ExtColorMaskIndexed) {
-            this->glColorMaski(index, red, green, blue, alpha);
+            glColorMaski(index, red, green, blue, alpha);
         } else if (index == 0) {
-            this->glColorMask(red, green, blue, alpha);
+            glColorMask(red, green, blue, alpha);
         }
 
         this->m_States.blend.colorMask[index].red = red;
@@ -2291,13 +2291,13 @@ void GLDevice::SetCullMode(GLEnum cullMode) {
     if (this->m_States.rasterizer.cullMode != cullMode) {
         if (cullMode) {
             if (cullMode - GL_CW <= 1) {
-                this->glEnable(GL_CULL_FACE);
-                this->glFrontFace(cullMode);
+                glEnable(GL_CULL_FACE);
+                glFrontFace(cullMode);
             }
 
             this->m_States.rasterizer.cullMode = cullMode;
         } else {
-            this->glDisable(GL_CULL_FACE);
+            glDisable(GL_CULL_FACE);
             this->m_States.rasterizer.cullMode = 0;
         }
     }
@@ -2310,9 +2310,9 @@ void GLDevice::SetDepthBias(float constantBias, float slopeScaledBias) {
 void GLDevice::SetDepthTestEnable(bool enable) {
     if (this->m_States.depth.testEnable != enable) {
         if (enable) {
-            this->glEnable(GL_DEPTH_TEST);
+            glEnable(GL_DEPTH_TEST);
         } else {
-            this->glDisable(GL_DEPTH_TEST);
+            glDisable(GL_DEPTH_TEST);
         }
 
         this->m_States.depth.testEnable = enable;
@@ -2321,14 +2321,14 @@ void GLDevice::SetDepthTestEnable(bool enable) {
 
 void GLDevice::SetDepthTestFunc(GLEnum func) {
     if (this->m_States.depth.compareFunc != func) {
-        this->glDepthFunc(func);
+        glDepthFunc(func);
         this->m_States.depth.compareFunc = func;
     }
 }
 
 void GLDevice::SetDepthWriteMask(bool enable) {
     if (this->m_States.depth.writeMask != enable) {
-        this->glDepthMask(enable);
+        glDepthMask(enable);
         this->m_States.depth.writeMask = enable;
     }
 }
@@ -2377,7 +2377,7 @@ void GLDevice::SetDisplay(uint32_t width, uint32_t height, GLTextureFormat a4, G
 
     if (a7) {
         if (this->m_Context->m_Window) {
-            this->m_Context->m_Window->resize(width, height);
+            this->m_Context->m_Window->Resize(width, height);
         }
 
         this->m_Context->SetWindow(this->m_Context->m_Window, 0);
@@ -2406,7 +2406,7 @@ void GLDevice::SetFogColor(float r, float g, float b, float a) {
         this->m_States.fixedFunc.fogColor.b = b;
         this->m_States.fixedFunc.fogColor.a = a;
 
-        functions1_1->glFogfv(GL_FOG_COLOR, reinterpret_cast<GLfloat *>(&this->m_States.fixedFunc.fogColor));
+        glFogfv(GL_FOG_COLOR, reinterpret_cast<GLfloat *>(&this->m_States.fixedFunc.fogColor));
 
         // TODO logic related to a renderer info value
     }
@@ -2415,9 +2415,9 @@ void GLDevice::SetFogColor(float r, float g, float b, float a) {
 void GLDevice::SetFogEnable(bool enable) {
     if (this->m_States.fixedFunc.fogEnable != enable) {
         if (enable) {
-            this->glEnable(GL_FOG);
+            glEnable(GL_FOG);
         } else {
-            this->glDisable(GL_FOG);
+            glDisable(GL_FOG);
         }
 
         this->m_States.fixedFunc.fogEnable = enable;
@@ -2427,17 +2427,17 @@ void GLDevice::SetFogEnable(bool enable) {
 void GLDevice::SetFogParam(GLEnum param, float value) {
     if (param == GL_FOG_START) {
         if (this->m_States.fixedFunc.fogStart != value) {
-            functions1_1->glFogf(GL_FOG_START, value);
+            glFogf(GL_FOG_START, value);
             this->m_States.fixedFunc.fogStart = value;
         }
     } else if (param == GL_FOG_END) {
         if (this->m_States.fixedFunc.fogEnd != value) {
-            functions1_1->glFogf(GL_FOG_END, value);
+            glFogf(GL_FOG_END, value);
             this->m_States.fixedFunc.fogEnd = value;
         }
     } else if (param == GL_FOG_DENSITY) {
         if (this->m_States.fixedFunc.fogDensity != value) {
-            functions1_1->glFogf(GL_FOG_DENSITY, value);
+            glFogf(GL_FOG_DENSITY, value);
             this->m_States.fixedFunc.fogDensity = value;
         }
     } else {
@@ -2453,9 +2453,9 @@ void GLDevice::SetIndexBuffer(GLBuffer *buffer) {
 void GLDevice::SetLightingEnable(bool enable) {
     if (this->m_States.fixedFunc.lighting.enable != enable) {
         if (enable) {
-            this->glEnable(GL_LIGHTING);
+            glEnable(GL_LIGHTING);
         } else {
-            this->glDisable(GL_LIGHTING);
+            glDisable(GL_LIGHTING);
         }
 
         this->m_States.fixedFunc.lighting.enable = enable;
@@ -2499,14 +2499,14 @@ void GLDevice::SetModelView(GLEnum transform) {
         }
 
         if (this->m_States.fixedFunc.transforms.matrixMode != GL_MODELVIEW) {
-            functions1_1->glMatrixMode(GL_MODELVIEW);
+            glMatrixMode(GL_MODELVIEW);
             this->m_States.fixedFunc.transforms.matrixMode = GL_MODELVIEW;
         }
 
         if (modelView.isIdentity) {
-            functions1_1->glLoadIdentity();
+            glLoadIdentity();
         } else {
-            functions1_1->glLoadMatrixf(modelView.m);
+            glLoadMatrixf(modelView.m);
         }
 
         this->m_States.fixedFunc.transforms.modelviewStatus = transform;
@@ -2534,9 +2534,9 @@ void GLDevice::SetShader(GLShader::ShaderType shaderType, GLShader *shader) {
     if (shaderType == GLShader::eVertexShader) {
         if (this->m_States.shader.vertexShaderEnable != enable) {
             if (enable) {
-                this->glEnable(GL_VERTEX_PROGRAM_ARB);
+                glEnable(GL_VERTEX_PROGRAM_ARB);
             } else {
-                this->glDisable(GL_VERTEX_PROGRAM_ARB);
+                glDisable(GL_VERTEX_PROGRAM_ARB);
             }
 
             this->m_States.shader.vertexShaderEnable = enable;
@@ -2546,9 +2546,9 @@ void GLDevice::SetShader(GLShader::ShaderType shaderType, GLShader *shader) {
     } else if (shaderType == GLShader::ePixelShader) {
         if (this->m_States.shader.pixelShaderEnable != enable) {
             if (enable) {
-                this->glEnable(GL_FRAGMENT_PROGRAM_ARB);
+                glEnable(GL_FRAGMENT_PROGRAM_ARB);
             } else {
-                this->glDisable(GL_FRAGMENT_PROGRAM_ARB);
+                glDisable(GL_FRAGMENT_PROGRAM_ARB);
             }
 
             this->m_States.shader.pixelShaderEnable = enable;
@@ -2685,7 +2685,7 @@ void GLDevice::SetUnpackClientStorage(bool enable) {
     // Blizzard::Debug::Assert(!this->IsUsingPBO() || enable == GL_FALSE);
 
     if (this->m_States.misc.unpackClientStorage != enable) {
-        //this->glPixelStorei(GL_UNPACK_CLIENT_STORAGE, enable);
+        //glPixelStorei(GL_UNPACK_CLIENT_STORAGE, enable);
         this->m_States.misc.unpackClientStorage = enable;
     }
 }
@@ -2712,7 +2712,7 @@ void GLDevice::SetViewport(const GLRect &viewport, double zNear, double zFar) {
             || this->m_States.rasterizer.viewport.width != viewport.width
             || this->m_States.rasterizer.viewport.height != viewport.height
             ) {
-        this->glViewport(viewport.left, viewport.top, viewport.width, viewport.height);
+        glViewport(viewport.left, viewport.top, viewport.width, viewport.height);
         this->m_States.rasterizer.viewport = viewport;
     }
 
@@ -2720,7 +2720,7 @@ void GLDevice::SetViewport(const GLRect &viewport, double zNear, double zFar) {
             this->m_States.rasterizer.zNear != zNear
             || this->m_States.rasterizer.zFar != zFar
             ) {
-        functions1_1->glDepthRange(zNear, zFar);
+        glDepthRange(zNear, zFar);
         this->m_States.rasterizer.zNear = zNear;
         this->m_States.rasterizer.zFar = zFar;
     }
@@ -2768,10 +2768,10 @@ void GLDevice::Sub34BB0(GLEnum a2, GLMipmap *a3, uint32_t index) {
 
 void GLDevice::Sub38460(bool a2) {
     if (this->m_States.binding.framebuffer == 0) {
-        functions1_1->glDrawBuffer(GL_BACK);
+        glDrawBuffer(GL_BACK);
         this->m_States.misc.drawBuffers[0] = GL_BACK;
 
-        this->glReadBuffer(GL_BACK);
+        glReadBuffer(GL_BACK);
         this->m_States.misc.readBuffer = GL_BACK;
 
         return;
@@ -2805,7 +2805,7 @@ void GLDevice::Swap() {
         this->m_FrameNumber++;
         this->m_DrawCount = 0;
     } else {
-        this->glFlush();//RenderAPPLE
+        glFlush();
         this->m_DrawCount = 0;
     }
 }

@@ -33,7 +33,7 @@ void GLContext::SetCurrentGLContext(GLContext *context) {
 }
 
 GLContext::GLContext(GLDevice *a2, const char *a3) {
-    this->m_Context = nullptr;
+//    this->m_Context = nullptr;
     this->m_Window = nullptr;
     this->m_Windowed = false;
     this->m_MTGLEnabled = false;
@@ -45,7 +45,7 @@ GLContext::GLContext(GLDevice *a2, const char *a3) {
 
 int32_t GLContext::GetBackingWidth() {
     if (this->m_Windowed) {
-        return this->m_Window->width();
+        return this->m_Window->GetWidth();
     } else {
         return this->m_Width;
     }
@@ -53,7 +53,7 @@ int32_t GLContext::GetBackingWidth() {
 
 int32_t GLContext::GetBackingHeight() {
     if (this->m_Windowed) {
-        return this->m_Window->height();
+        return this->m_Window->GetHeight();
     } else {
         return this->m_Height;
     }
@@ -61,7 +61,7 @@ int32_t GLContext::GetBackingHeight() {
 
 int32_t GLContext::GetWidth() {
     if (this->m_Windowed) {
-        return this->m_Window->width();
+        return this->m_Window->GetWidth();
     } else {
         return this->m_Width;
     }
@@ -69,7 +69,7 @@ int32_t GLContext::GetWidth() {
 
 int32_t GLContext::GetHeight() {
     if (this->m_Windowed) {
-        return this->m_Window->height();
+        return this->m_Window->GetHeight();
     } else {
         return this->m_Height;
     }
@@ -80,55 +80,55 @@ bool GLContext::IsCurrentContext() {
 }
 
 void GLContext::MakeCurrent(bool a2) {
-    BLIZZARD_ASSERT(this->m_Context != nullptr);
-
-    if (a2) {
-        GLContext *v6 = GLContext::GetNSOpenGLCurrentContext();
-        GLContext::SetCurrentContext(v6);
-    }
-
-    if (this->m_Context != GLContext::GetCurrentContext()) {
-        int32_t mtglEnabled = 0;
-        GLDevice *device = GLDevice::Get();
-        if (GLContext::GetCurrentContext() && device) {
-            mtglEnabled = this->m_MTGLEnabled;
-            device->glFlush();
-        }
-        this->m_Context->makeCurrent(this->surface());
-
-        GLContext::SetCurrentContext(this->m_Context);
-        GLContext::SetCurrentGLContext(this);
-
-
-        if (device) {
-            device->ApplyGLStates(device->m_States, 1);
-            device->ApplyGLBindings(device->m_States, 1);
-            device->m_DefaultVertexArrayObject.ApplyGLStates(device->m_DefaultVertexArrayObject.m_GLStates);
-        }
-    }
+//    BLIZZARD_ASSERT(this->m_Context != nullptr);
+//
+//    if (a2) {
+//        GLContext *v6 = GLContext::GetNSOpenGLCurrentContext();
+//        GLContext::SetCurrentContext(v6);
+//    }
+//
+//    if (this->m_Context != GLContext::GetCurrentContext()) {
+//        int32_t mtglEnabled = 0;
+//        GLDevice *device = GLDevice::Get();
+//        if (GLContext::GetCurrentContext() && device) {
+//            mtglEnabled = this->m_MTGLEnabled;
+//            glFlush();
+//        }
+////        this->m_Context->MakeCurrent(this->surface());
+////
+////        GLContext::SetCurrentContext(this->m_Context);
+//        GLContext::SetCurrentGLContext(this);
+//
+//
+//        if (device) {
+//            device->ApplyGLStates(device->m_States, 1);
+//            device->ApplyGLBindings(device->m_States, 1);
+//            device->m_DefaultVertexArrayObject.ApplyGLStates(device->m_DefaultVertexArrayObject.m_GLStates);
+//        }
+//    }
 }
 
 void GLContext::SetContextFormat(GLTextureFormat a2, uint32_t sampleCount) {
-    QSurfaceFormat format;
-    format.setRenderableType(QSurfaceFormat::OpenGL);
-    format.setVersion(4, 5); // 设置 OpenGL 版本为 4.5
-    format.setProfile(QSurfaceFormat::CoreProfile); // 核心模式
-    format.setSamples(sampleCount); // 设置多重采样数
-    format.setSwapBehavior(QSurfaceFormat::DoubleBuffer); // 双缓冲
+//    QSurfaceFormat format;
+//    format.setRenderableType(QSurfaceFormat::OpenGL);
+//    format.setVersion(4, 5); // 设置 OpenGL 版本为 4.5
+//    format.setProfile(QSurfaceFormat::CoreProfile); // 核心模式
+//    format.setSamples(sampleCount); // 设置多重采样数
+//    format.setSwapBehavior(QSurfaceFormat::DoubleBuffer); // 双缓冲
 
-    setFormat(format);
+//    setFormat(format);
 
     if (this->m_Window) {
         this->m_Window->SetOpenGLContext(this);
     }
 
-    if (this->m_Context != GLContext::GetCurrentContext()) {
-        this->MakeCurrent(false);
-    }
+//    if (this->m_Context != GLContext::GetCurrentContext()) {
+//        this->MakeCurrent(false);
+//    }
 }
 
 void GLContext::SetFullscreenMode(uint32_t, uint32_t, uint32_t, bool) {
-    this->m_Window->showFullScreen();
+//    this->m_Window->showFullScreen();
 }
 
 void GLContext::SetWindow(GLAbstractWindow *pWindow, bool show) {
@@ -143,7 +143,7 @@ void GLContext::SetWindow(GLAbstractWindow *pWindow, bool show) {
 
     if (this->m_Windowed && pWindow == this->m_Window) {
         if (show) {
-            pWindow->show();
+            pWindow->Show();
         }
         return;
     }
@@ -158,7 +158,7 @@ void GLContext::SetWindow(GLAbstractWindow *pWindow, bool show) {
 }
 
 void GLContext::Swap() {
-    this->m_Context->swapBuffers(this->m_Window);
+//    swapBuffers(this->m_Window);
 }
 
 

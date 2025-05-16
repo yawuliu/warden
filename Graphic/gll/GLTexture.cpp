@@ -105,7 +105,7 @@ void GLTexture::FreeTexture() {
 
     // TODO this->Sub690D0();
 
-    device->glDeleteTextures(1, &this->m_TextureID);
+    glDeleteTextures(1, &this->m_TextureID);
 
     this->m_GenerateMipmaps = 0;
     this->m_MaxMipmapLevel = 1000;
@@ -224,18 +224,18 @@ void GLTexture::RecreateGLTexture() {
         }
     }
     auto device = GLDevice::Get();
-    device->glTexParameterf(this->m_TextureType, GL_TEXTURE_LOD_BIAS, this->m_Sampler.mipmapBias);
-    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_S, this->m_Sampler.addressModeS);
-    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_T, this->m_Sampler.addressModeT);
-    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_R, this->m_Sampler.addressModeR);
-    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_MIN_FILTER, this->m_Sampler.minFilterMode);
-    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_MAG_FILTER, this->m_Sampler.magFilterMode);
-    device->glTexParameterf(this->m_TextureType, GL_TEXTURE_MAX_ANISOTROPY_EXT, this->m_Sampler.maxAnisotropy);
-    device->glTexParameterfv(this->m_TextureType, GL_TEXTURE_BORDER_COLOR,
+    glTexParameterf(this->m_TextureType, GL_TEXTURE_LOD_BIAS, this->m_Sampler.mipmapBias);
+    glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_S, this->m_Sampler.addressModeS);
+    glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_T, this->m_Sampler.addressModeT);
+    glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_R, this->m_Sampler.addressModeR);
+    glTexParameteri(this->m_TextureType, GL_TEXTURE_MIN_FILTER, this->m_Sampler.minFilterMode);
+    glTexParameteri(this->m_TextureType, GL_TEXTURE_MAG_FILTER, this->m_Sampler.magFilterMode);
+    glTexParameterf(this->m_TextureType, GL_TEXTURE_MAX_ANISOTROPY_EXT, this->m_Sampler.maxAnisotropy);
+    glTexParameterfv(this->m_TextureType, GL_TEXTURE_BORDER_COLOR,
                              reinterpret_cast<GLfloat *>(&this->m_Sampler.borderColor));
-    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_MAX_LEVEL, this->m_MaxMipmapLevel);
-    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_BASE_LEVEL, this->m_BaseMipmapLevel);
-    device->glTexParameteri(this->m_TextureType, GL_GENERATE_MIPMAP, this->m_GenerateMipmaps);
+    glTexParameteri(this->m_TextureType, GL_TEXTURE_MAX_LEVEL, this->m_MaxMipmapLevel);
+    glTexParameteri(this->m_TextureType, GL_TEXTURE_BASE_LEVEL, this->m_BaseMipmapLevel);
+    glTexParameteri(this->m_TextureType, GL_GENERATE_MIPMAP, this->m_GenerateMipmaps);
 }
 
 void GLTexture::ResizeMipmaps() {
@@ -261,7 +261,7 @@ void GLTexture::SetAddressModeS(GLEnum mode) {
     auto device = GLDevice::Get();
     if (mode == GL_CLAMP_TO_EDGE) {
         this->Bind(nullptr, 0);
-        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_S, mode);
+        glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_S, mode);
         this->m_Sampler.addressModeS = mode;
     } else {
         // Workaround for buggy GPU (possibly ATI Radeon X1900)
@@ -276,7 +276,7 @@ void GLTexture::SetAddressModeS(GLEnum mode) {
         }
 
         this->Bind(nullptr, 0);
-        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_S, mode);
+        glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_S, mode);
         this->m_Sampler.addressModeS = mode;
     }
 }
@@ -288,7 +288,7 @@ void GLTexture::SetAddressModeT(GLEnum mode) {
     auto device = GLDevice::Get();
     if (mode == GL_CLAMP_TO_EDGE) {
         this->Bind(nullptr, 0);
-        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_T, mode);
+        glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_T, mode);
         this->m_Sampler.addressModeT = mode;
     } else {
         // Workaround for buggy GPU (possibly ATI Radeon X1900)
@@ -303,7 +303,7 @@ void GLTexture::SetAddressModeT(GLEnum mode) {
         }
 
         this->Bind(nullptr, 0);
-        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_T, mode);
+        glTexParameteri(this->m_TextureType, GL_TEXTURE_WRAP_T, mode);
         this->m_Sampler.addressModeT = mode;
     }
 }
@@ -321,7 +321,7 @@ void GLTexture::SetCompareMode(GLEnum compareMode) {
     auto device = GLDevice::Get();
     if (this->m_CompareMode != compareMode) {
         this->Bind(nullptr, 0);
-        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_COMPARE_MODE, compareMode);
+        glTexParameteri(this->m_TextureType, GL_TEXTURE_COMPARE_MODE, compareMode);
         this->m_CompareMode = compareMode;
     }
 }
@@ -336,7 +336,7 @@ void GLTexture::SetMagFilterMode(GLEnum mode) {
     }
     auto device = GLDevice::Get();
     this->Bind(nullptr, 0);
-    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_MAG_FILTER, mode);
+    glTexParameteri(this->m_TextureType, GL_TEXTURE_MAG_FILTER, mode);
     this->m_Sampler.magFilterMode = mode;
 }
 
@@ -346,7 +346,7 @@ void GLTexture::SetMaxAnisotropy(int32_t maxAnisotropy) {
     }
     auto device = GLDevice::Get();
     this->Bind(nullptr, 0);
-    device->glTexParameterf(this->m_TextureType, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy);
+    glTexParameterf(this->m_TextureType, GL_TEXTURE_MAX_ANISOTROPY_EXT, maxAnisotropy);
     this->m_Sampler.maxAnisotropy = maxAnisotropy;
 }
 
@@ -360,7 +360,7 @@ void GLTexture::SetMinFilterMode(GLEnum mode) {
     }
     auto device = GLDevice::Get();
     this->Bind(nullptr, 0);
-    device->glTexParameteri(this->m_TextureType, GL_TEXTURE_MIN_FILTER, mode);
+    glTexParameteri(this->m_TextureType, GL_TEXTURE_MIN_FILTER, mode);
     this->m_Sampler.minFilterMode = mode;
 }
 
@@ -515,8 +515,8 @@ void GLTexture::SetupTexture() {
     if (this->GetFormatInfo().m_DataFormat == GL_DEPTH_COMPONENT ||
         this->GetFormatInfo().m_DataFormat == GL_DEPTH_STENCIL) {
         this->SetCompareMode(GLDevice::m_ExtARBShadow >= 1 ? GL_COMPARE_R_TO_TEXTURE : 0);
-        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
-        device->glTexParameteri(this->m_TextureType, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
+        glTexParameteri(this->m_TextureType, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
+        glTexParameteri(this->m_TextureType, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
     } else {
         this->SetCompareMode(0);
     }
@@ -528,14 +528,14 @@ void GLTexture::SetupTexture() {
     int32_t autogenMipmap = this->m_Flags & GLTFLAG_AUTOGEN_MIPMAP;
     if (autogenMipmap != this->m_GenerateMipmaps) {
         this->Bind(nullptr, 0);
-        device->glTexParameteri(this->m_TextureType, GL_GENERATE_MIPMAP, autogenMipmap);
+        glTexParameteri(this->m_TextureType, GL_GENERATE_MIPMAP, autogenMipmap);
         this->m_GenerateMipmaps = autogenMipmap;
     }
 
     int32_t maxMipmapLevel = this->m_NumMipmap - 1;
     if (maxMipmapLevel != this->m_MaxMipmapLevel) {
         this->Bind(nullptr, 0);
-        device->glTexParameteri(this->m_TextureType, GL_TEXTURE_MAX_LEVEL, maxMipmapLevel);
+        glTexParameteri(this->m_TextureType, GL_TEXTURE_MAX_LEVEL, maxMipmapLevel);
         this->m_MaxMipmapLevel = maxMipmapLevel;
     }
 

@@ -3,9 +3,9 @@
 #include "Storm/Autorelease.h"
 #include "Storm/Debug.h"
 #include <cmath>
-#include <QOpenGLWindow>
-#include <QScreen>
-#include <QDebug>
+//#include <QOpenGLWindow>
+//#include <QScreen>
+//#include <QDebug>
 
 
 GLWindowCallbacks DefaultCallbacks = {
@@ -19,18 +19,46 @@ bool GLWindow::CanEnterFullscreenMode() {
 
 void GLWindow::EnterFullscreenMode() {
     m_FullscreenWindow = this;
-    this->showFullScreen();
+   // this->showFullScreen();
 }
 
 void GLWindow::ExitFullscreenMode() {
     if (m_FullscreenWindow) {
-        this->showNormal();
+      //  this->showNormal();
         m_FullscreenWindow = nullptr;
     }
 }
 
-GLWindow::GLWindow(QScreen *primaryScreen, GLWindowCallbacks *callbacks) {
+GLWindow::GLWindow( GLWindowCallbacks *callbacks) {//QScreen *primaryScreen,
     this->SetCallbacks(callbacks);
+}
+
+CRect GLWindow::GetRect(void) {
+    return CRect();
+}
+
+void GLWindow::Show(void) {
+
+}
+
+void GLWindow::Resize(uint32_t uint32, uint32_t uint321) {
+
+}
+
+void GLWindow::SetTitle(const char *string) {
+
+}
+
+void GLWindow::CreateView(void) {
+
+}
+
+HWND GLWindow::GetNSView(void) {
+    return nullptr;
+}
+
+CRect GLWindow::GetBackingRect() {
+    return CRect();
 }
 
 void GLWindow::SetCallbacks(GLWindowCallbacks *callbacks) {
@@ -43,30 +71,46 @@ void GLWindow::SetCallbacks(GLWindowCallbacks *callbacks) {
     }
 }
 
-void GLWindow::SetOpenGLContext(QOpenGLContext *context) {
-    setSurfaceType(OpenGLSurface);
+void GLWindow::SetOpenGLContext(GLContext *context) {
+//    setSurfaceType(OpenGLSurface);
+//
+//    QSurfaceFormat fmt;
+//    fmt.setMajorVersion(4);
+//    fmt.setMinorVersion(2);
+//    fmt.setProfile(QSurfaceFormat::CoreProfile); //whatever this is
+//
+//    this->setFormat(fmt);
+//
+//    m_Context = context;
+//    m_Context->setFormat(fmt);
+//
+//    m_Context->create();
+//
+//    if (!m_Context->isValid()) {
+//        qCritical() << "The OpenGL context is invalid!"; //I allways get this message
+//    }
+////now another test:
+////the next line prints: "Window format version is: 4.2" which is correct
+//    qDebug() << "Window format version is: " << this->format().majorVersion() << "." << this->format().minorVersion();
+////the next line prints: "Context format version is: 2.0" Which is ofcourse not correct! WTF?
+//    qDebug() << "Context format version is: " << m_Context->format().majorVersion() << "."
+//             << m_Context->format().minorVersion();
+}
 
-    QSurfaceFormat fmt;
-    fmt.setMajorVersion(4);
-    fmt.setMinorVersion(2);
-    fmt.setProfile(QSurfaceFormat::CoreProfile); //whatever this is
+int32_t GLWindow::GetWidth(void) {
+    return 0;
+}
 
-    this->setFormat(fmt);
+int32_t GLWindow::GetHeight(void) {
+    return 0;
+}
 
-    m_Context = context;
-    m_Context->setFormat(fmt);
+int32_t GLWindow::GetBackingWidth() {
+    return 0;
+}
 
-    m_Context->create();
-
-    if (!m_Context->isValid()) {
-        qCritical() << "The OpenGL context is invalid!"; //I allways get this message
-    }
-//now another test:
-//the next line prints: "Window format version is: 4.2" which is correct
-    qDebug() << "Window format version is: " << this->format().majorVersion() << "." << this->format().minorVersion();
-//the next line prints: "Context format version is: 2.0" Which is ofcourse not correct! WTF?
-    qDebug() << "Context format version is: " << m_Context->format().majorVersion() << "."
-             << m_Context->format().minorVersion();
+int32_t GLWindow::GetBackingHeight() {
+    return 0;
 }
 
 

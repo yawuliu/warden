@@ -4,7 +4,7 @@
 #include "GLAbstractWindow.h"
 #include "CGRect.h"
 #include <string>
-#include <QScreen>
+//#include <QScreen>
 
 struct GLWindowCallbacks {
     void (*OnResized)(int32_t, int32_t, bool);
@@ -21,9 +21,9 @@ struct GLWindowCallbacks {
 
 class GLWindow : public GLAbstractWindow {
 public:
-    GLWindow(QScreen *primaryScreen, GLWindowCallbacks *);
+    GLWindow(GLWindowCallbacks *);//QScreen *primaryScreen,
 
-    QOpenGLContext *m_Context = nullptr;
+//    QOpenGLContext *m_Context = nullptr;
     GLAbstractWindow *m_FullscreenWindow = nullptr;
     GLWindowCallbacks *m_Callbacks;
     GLWindowCallbacks *m_ActiveCallbacks;
@@ -40,7 +40,30 @@ public:
     // Virtual member functions
     virtual void SetCallbacks(GLWindowCallbacks *);
 
-    void SetOpenGLContext(QOpenGLContext *context) override;
+    // void SetOpenGLContext() override;//QOpenGLContext *context
+    void SetOpenGLContext(GLContext *context) override;
+
+    CRect GetRect(void) override;
+
+    void Show(void) override;
+
+    void Resize(uint32_t uint32, uint32_t uint321) override;
+
+    void SetTitle(const char *string) override;
+
+    void CreateView(void) override;
+
+    HWND GetNSView(void) override;
+
+    CRect GetBackingRect() override;
+
+    int32_t GetWidth(void) override;
+
+    int32_t GetHeight(void) override;
+
+    int32_t GetBackingWidth() override;
+
+    int32_t GetBackingHeight() override;
 };
 
 

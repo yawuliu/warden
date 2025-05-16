@@ -3,7 +3,7 @@
 #include "GLDevice.h"
 
 void GLFlush::Execute(GLDevice *device) {
-    device->glFlush();
+    glFlush();
 }
 
 GLTexUnmap::GLTexUnmap(GLTexture *texture, GLMipmap *mipmap, GLMipmap::MapParams *mapParams) {

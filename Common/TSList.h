@@ -5,6 +5,7 @@
 #include "TSLink.h"
 #include <cstdint>
 #include <typeinfo>
+#include <new>
 #include "offset_of.h"
 
 #define STORM_LIST(T) TSList<T, TSGetLink<T>>
@@ -195,7 +196,7 @@ T *TSList<T, TGetLink>::NewNode(uint32_t location, size_t extrabytes, uint32_t f
     T *node;
 
     if (m) {
-        node = new(m) T();
+        node = new ((void*)m) T();
     } else {
         node = nullptr;
     }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "GLTypes.h"
-#include <QGLFormat>
+//#include <QGLFormat>
 
 typedef GLenum GLEnum;
 

@@ -25,7 +25,7 @@ GLBuffer *GLBuffer::Create(GLEnum type, uint32_t size, const void *a3, GLEnum us
     device->BindBuffer(buffer, GL_ZERO);
 
     if (GLBuffer::m_UsingVBO) {
-        device->glBufferData(buffer->m_Type, buffer->m_Size, a3, buffer->m_Usage);
+        glBufferData(buffer->m_Type, buffer->m_Size, a3, buffer->m_Usage);
 //        device->functions4_3->glBufferParameteriAPPLE(buffer->m_Type, GL_BUFFER_SERIALIZED_MODIFY_APPLE,
 //                                                     buffer->m_Usage - GL_DYNAMIC_DRAW > 1);
 //        device->functions4_3->glBufferParameteriAPPLE(buffer->m_Type, GL_BUFFER_FLUSHING_UNMAP_APPLE, 0);
@@ -71,10 +71,10 @@ char *GLBuffer::Map(uint32_t offset, uint32_t size, eMapFlag flag) {
                 BLIZZARD_ASSERT(offset == 0);
             }
 
-            device->glBufferData(this->m_Type, this->m_Size, nullptr, this->m_Usage);
+            glBufferData(this->m_Type, this->m_Size, nullptr, this->m_Usage);
         }
 
-        void *data = device->functions4_5->glMapBuffer(this->m_Type, GLBuffer::s_FlagToAccess[flag]);
+        void *data = glMapBuffer(this->m_Type, GLBuffer::s_FlagToAccess[flag]);
         this->m_Data = reinterpret_cast<char *>(data);
 
         BLIZZARD_ASSERT(this->m_Data != nullptr);
@@ -89,7 +89,7 @@ void GLBuffer::ReleaseObject() {
             GLDevice *device = GLDevice::Get();
             device->BindBuffer(this, GL_ZERO);
 
-            device->glBufferData(this->m_Type, 1, nullptr, this->m_Usage);
+            glBufferData(this->m_Type, 1, nullptr, this->m_Usage);
 
             // TODO GLPool<GLBuffer>::GLObjectPool::Push((GLPool<GLBuffer>::m_pool + 32776), this);
         } else {
@@ -111,7 +111,7 @@ void GLBuffer::Unmap(uint32_t size) {
 
     if (this->m_MapFlag != 3) {
         if (GLBuffer::m_UsingVBO) {
-            device->glFlushMappedBufferRange(this->m_Type, this->m_MapOffset, size ? size : this->m_MapSize);
+            glFlushMappedBufferRange(this->m_Type, this->m_MapOffset, size ? size : this->m_MapSize);
         }
 
         // TODO
@@ -123,7 +123,7 @@ void GLBuffer::Unmap(uint32_t size) {
         return;
     }
 
-    GLboolean result = device->glUnmapBuffer(this->m_Type);
+    GLboolean result = glUnmapBuffer(this->m_Type);
     BLIZZARD_ASSERT(result);
 
     this->m_MapFlag = GLMap_NotMapped;

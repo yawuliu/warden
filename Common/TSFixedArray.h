@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Storm/Memory.h"
+#include <new>
 #include "TSBaseArray.h"
 #include <cstdint>
 
@@ -88,7 +89,7 @@ void TSFixedArray<T>::ReallocData(uint32_t count) {
             uint32_t smallestCount = count >= this->m_count ? this->m_count : count;
 
             for (uint32_t i = 0; i < smallestCount; i++) {
-                new(&this->m_data[i]) T(oldData[i]);
+                new ((void*)&this->m_data[i]) T(oldData[i]);
                 (&oldData[i])->~T();
             }
 
@@ -115,7 +116,8 @@ void TSFixedArray<T>::SetCount(uint32_t count) {
             this->ReallocData(count);
 
             for (uint32_t i = this->m_count; i < count; i++) {
-                new(&this->m_data[i]) T();
+                void * ptr = &this->m_data[i];
+                new (ptr) T();
             }
 
             this->m_count = count;

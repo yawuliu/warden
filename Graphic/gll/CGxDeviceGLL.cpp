@@ -11,8 +11,8 @@
 #include <cstring>
 #include <NTempest/CiRect.h>
 #include <NTempest/CRect.h>
-#include <QGuiApplication>
-#include <QScreen>
+//#include <QGuiApplication>
+//#include <QScreen>
 
 using namespace NTempest;
 
@@ -141,12 +141,19 @@ void CGxDeviceGLL::CapsWindowSize(CRect &rect) {
 void CGxDeviceGLL::CapsWindowSizeInScreenCoords(CRect &dst) {
     if (this->IDevIsWindowed()) {
         auto windowRect = this->DeviceCurWindow();
-        auto deviceRect = this->m_glWindow->geometry();
 
-        dst.minX = windowRect.minX + deviceRect.left();
-        dst.maxX = windowRect.maxX + deviceRect.left();
-        dst.minY = windowRect.minY + deviceRect.bottom();
-        dst.maxY = windowRect.maxY + deviceRect.bottom();
+        POINT points[2];
+        points[0].x = 0;
+        points[0].y = 0;
+        points[1].x = windowRect.maxX;
+        points[1].y = windowRect.maxY;
+
+        MapWindowPoints(this->m_hwnd, nullptr, points, 2);
+
+        dst.minY = points[0].y;
+        dst.minX = points[0].x;
+        dst.maxY = points[1].y;
+        dst.maxX = points[1].x;
     } else {
         dst = this->DeviceCurWindow();
     }
@@ -193,10 +200,10 @@ CGxDeviceGLL::DeviceCreate(int32_t (*windowProc)(void *window, uint32_t message,
         rect.maxX = newBounds.right;
         rect.minY = newBounds.bottom;
     }
-    QScreen *primaryScreen = QGuiApplication::primaryScreen();
-    this->m_glWindow = new GLWindow(primaryScreen, nullptr);
+//    QScreen *primaryScreen = QGuiApplication::primaryScreen();
+    this->m_glWindow = new GLWindow(nullptr);
     //this->m_glWindow->SetViewClass(GetEngineViewClass());
-    this->m_glWindow->setTitle("World of Warcraft");
+    this->m_glWindow->SetTitle("World of Warcraft");
 
     this->m_glDevice.Init(this->m_glWindow, "WoW", 4, GLTF_D24);
 
@@ -214,7 +221,7 @@ CGxDeviceGLL::DeviceCreate(int32_t (*windowProc)(void *window, uint32_t message,
         AssignEngineViewCallbacks(v15);
         this->m_glWindow->SetCallbacks(v15);
 
-        this->m_glWindow->show();
+        this->m_glWindow->Show();
 
         // TODO
         // (this + 4008) = 1;

@@ -25,6 +25,8 @@ public:
     static GLEnum s_primitiveConversion[];
 
     // Member variables
+    HWND m_hwnd = nullptr;
+    ATOM m_hwndClass;
     GLDevice m_glDevice;
     GLWindow *m_glWindow;
     GLVertexFormat m_glFormats[GxVertexBufferFormats_Last] = {};
