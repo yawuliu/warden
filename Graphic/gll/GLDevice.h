@@ -118,7 +118,7 @@ public:
     GLTexture2D *m_BackBufferColor = nullptr;
     GLTexture2D *m_BackBufferDepth = nullptr;
     GLTexture2D *m_BackBufferStencil = nullptr;
-    GLContext *m_Context;
+    GLContext  *m_Context;
     GLBufferPool *m_PBOPool = nullptr;
     GLWorker *m_TexWorker = nullptr;
     GLTexture *m_BoundTextures[4][16] = {};
@@ -146,7 +146,7 @@ public:
     bool m_StopCapturingBatches = 0;
     bool m_CaptureBatches = 0;
     int32_t m_IndentLevel = 0;
-    GLAbstractWindow *m_FirstCapturedWindow = nullptr;
+    QOpenGLWindow *m_FirstCapturedWindow = nullptr;
 
     // Member functions
     GLDevice();
@@ -204,7 +204,7 @@ public:
 
     void GLLDraw(GLEnum mode, uint32_t start, uint32_t end, uint32_t a5, uint32_t a6, uint32_t count);
 
-    void Init(GLAbstractWindow *a2, const char *a3, uint32_t a4, GLTextureFormat a5);
+    void Init(GLWindow *a2, const char *a3, uint32_t a4, GLTextureFormat a5);
 
     void LoadDefaultStates();
 

@@ -1261,8 +1261,8 @@ void GLDevice::BlitFramebuffer(GLMipmap *src, const GLRect *srcRect, GLMipmap *d
     } else {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        width = GLContext::GetCurrentGLContext()->GetBackingWidth();
-        height = GLContext::GetCurrentGLContext()->GetBackingHeight();
+        width = GLContext::GetCurrentContext()->GetBackingWidth();
+        height = GLContext::GetCurrentContext()->GetBackingHeight();
     }
 
     if (
@@ -1735,7 +1735,7 @@ void GLDevice::GLLDraw(GLEnum mode, uint32_t start, uint32_t end, uint32_t a5, u
 }
 
 
-void GLDevice::Init(GLAbstractWindow *a2, const char *a3, uint32_t a4, GLTextureFormat a5) {
+void GLDevice::Init(GLWindow *a2, const char *a3, uint32_t a4, GLTextureFormat a5) {
     if (this->m_Init) {
         return;
     }
@@ -2377,7 +2377,7 @@ void GLDevice::SetDisplay(uint32_t width, uint32_t height, GLTextureFormat a4, G
 
     if (a7) {
         if (this->m_Context->m_Window) {
-            this->m_Context->m_Window->Resize(width, height);
+            this->m_Context->m_Window->resize(width, height);
         }
 
         this->m_Context->SetWindow(this->m_Context->m_Window, 0);

@@ -89,10 +89,8 @@ void GLWindow::SetOpenGLContext(GLContext *context) {
     if (!m_Context->isValid()) {
         qCritical() << "The OpenGL context is invalid!"; //I allways get this message
     }
-//now another test:
-//the next line prints: "Window format version is: 4.2" which is correct
+
     qDebug() << "Window format version is: " << this->format().majorVersion() << "." << this->format().minorVersion();
-//the next line prints: "Context format version is: 2.0" Which is ofcourse not correct! WTF?
     qDebug() << "Context format version is: " << m_Context->format().majorVersion() << "."
              << m_Context->format().minorVersion();
 }

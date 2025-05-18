@@ -6,17 +6,25 @@
 #include <vector>
 #include "Storm/Thread.h"
 #include "GLTypes.h"
-#include <QOpenGLContext>
 #include "GLAbstractWindow.h"
+#include <QOpenGLContext>
+#include <QOpenGLWindow>
 
 
 // https://github.com/SFML/SFML/blob/master/src/SFML/Window/Win32/WglContext.hpp
 // https://docs.kanzi.com/3.9.8/en/reference/kanzi-runtime-api/a01314.html
 // https://doc.qt.io/qt-6/qopenglcontext.html
 class GLDevice;
-
-class GLContext  {//: public QOpenGLContext
+//
+class GLContext  {
 public:
+    struct Context {
+        QOpenGLContext* context;
+        QSurfaceFormat* pixelFormat;
+        int32_t sampleCount;
+
+        ~Context();
+    };
     struct GammaFormula {
         float m_RedMin;
         float m_RedMax;
@@ -32,25 +40,25 @@ public:
     // Static variables
     static QOpenGLContext *s_MainContext;
     static Blizzard::Thread::TLSSlot s_CurrentContext;
-//    static Blizzard::Thread::TLSSlot s_CurrentGLContext;
+    static Blizzard::Thread::TLSSlot s_CurrentGLContext;
     static int s_DesktopMode;
     int sampleCount;
 
     // Static functions
-    static GLContext *GetNSOpenGLCurrentContext();
+    static QOpenGLContext *GetNSOpenGLCurrentContext();
 
     static QOpenGLContext *GetCurrentContext();
 
     static void SetCurrentContext(QOpenGLContext *);
 
-//    static GLContext *GetCurrentGLContext();
+   static GLContext *GetCurrentGLContext();
 
-//    static void SetCurrentGLContext(GLContext *);
+   static void SetCurrentGLContext(GLContext *);
 
     // Member variables
     std::basic_string<char, std::char_traits<char>, std::allocator<char>> m_DebugName;
-//    std::map<uint32_t, GLContext::Context, std::less<uint32_t>, std::allocator<std::pair<const uint32_t, GLContext::Context>>> m_Contexts;
-    QOpenGLContext*  m_Context;
+    std::map<uint32_t, Context, std::less<uint32_t>, std::allocator<std::pair<const uint32_t, Context>>> m_Contexts;
+    Context*  m_Context;
     GLDevice *m_Device;
     GLAbstractWindow *m_Window;
     bool m_Windowed;
@@ -92,7 +100,7 @@ public:
 
     void Swap();
 
-
+    void Update();
 };
 
 
