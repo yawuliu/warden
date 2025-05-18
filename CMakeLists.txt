@@ -1,4 +1,12 @@
 cmake_minimum_required(VERSION 3.27)
+
+# Add folder where are supportive functions
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+# Include Qt basic functions
+include(QtCommon)
+
 project(warden)
 
 set(CMAKE_CXX_STANDARD 20)
@@ -6,14 +14,6 @@ add_definitions(-DWIN32_LEAN_AND_MEAN)
 if (WIN32 AND MSVC)
     add_compile_options(/wd4819)
 endif ()
-
-# Set up vcpkg
-# https://blog.csdn.net/weixin_44084452/article/details/141273813
-set(VCPKG_ROOT "C:/Users/liuyawu/.vcpkg-clion/vcpkg")
-set(VCPKG_TARGET_TRIPLET x64-windows) # Adjust for your system
-#set(CMAKE_TOOLCHAIN_FILE ${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake)
-#message(WARNING "${CMAKE_TOOLCHAIN_FILE}")
-set(CMAKE_PREFIX_PATH "C:/Users/liuyawu/.vcpkg-clion/vcpkg/installed/x64-windows")
 
 file(GLOB_RECURSE dir_src
         "Agile/*.h"
@@ -50,17 +50,19 @@ file(GLOB_RECURSE dir_src
         "Sound/*.h"
         "Sound/*.cpp"
 )
-# find_package(OpenGL REQUIRED)
-link_directories(${CMAKE_SOURCE_DIR}/build/Debug/)
-#find_package(Qt5 COMPONENTS Core Widgets OpenGL REQUIRED)
-#set(CMAKE_AUTOMOC ON)
-#set(CMAKE_AUTOUIC ON)
-#set(CMAKE_AUTORCC ON)
 
-#link_directories(${CMAKE_SOURCE_DIR}build/external/freetype-2.0.9/Debug/)
-add_executable(warden main.cpp external/glad/src/glad.c ${dir_src})
-#target_include_directories(warden PRIVATE Qt5::Core Qt5::Widgets Qt5::OpenGL)
-#target_link_libraries(warden PRIVATE Qt5::Core Qt5::Widgets Qt5::OpenGL)
+link_directories(${CMAKE_SOURCE_DIR}/build/Debug/)
+find_package(Qt6 REQUIRED COMPONENTS Gui Widgets OpenGL)
+qt_standard_project_setup()
+qt_add_executable(warden main.cpp external/glad/src/glad.c ${dir_src})
+target_link_libraries(warden PRIVATE Qt6::Gui Qt6::Widgets Qt6::OpenGL)
+set_target_properties(warden PROPERTIES
+        WIN32_EXECUTABLE ON
+        MACOSX_BUNDLE ON
+)
+add_custom_command(TARGET warden POST_BUILD
+        COMMAND ${QT_INSTALL_DIR}/bin/windeployqt "$<TARGET_FILE:warden>"
+)
 
 target_include_directories(warden PRIVATE "/")
 target_include_directories(warden PRIVATE "external/freetype-2.0.9/include")
@@ -80,7 +82,8 @@ add_subdirectory(${PROJECT_SOURCE_DIR}/external/expat-2.0.1)
 message("${CMAKE_SOURCE_DIR}/build/lib/Debug/")
 # target_link_libraries(warden PUBLIC ${OPENGL_LIBRARIES})
 # glew32d
-target_link_libraries(warden PUBLIC freetype-2.0 lua-5.1 ws2_32 wsock32 expat-2.0)
+#
+target_link_libraries(warden PUBLIC freetype-2.0 ws2_32 lua-5.1 wsock32 expat-2.0)
 target_compile_definitions(expat-2.0 PUBLIC -DXML_STATIC)
 set_target_properties(warden PROPERTIES RUNTIME_OUTPUT_DIRECTORY
         ${CMAKE_SOURCE_DIR}/build)

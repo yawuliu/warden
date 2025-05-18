@@ -6,7 +6,7 @@
 #include <vector>
 #include "Storm/Thread.h"
 #include "GLTypes.h"
-//#include <QOpenGLContext>
+#include <QOpenGLContext>
 #include "GLAbstractWindow.h"
 
 
@@ -30,27 +30,27 @@ public:
     };
 
     // Static variables
-    static GLContext *s_MainContext;
+    static QOpenGLContext *s_MainContext;
     static Blizzard::Thread::TLSSlot s_CurrentContext;
-    static Blizzard::Thread::TLSSlot s_CurrentGLContext;
+//    static Blizzard::Thread::TLSSlot s_CurrentGLContext;
     static int s_DesktopMode;
     int sampleCount;
 
     // Static functions
     static GLContext *GetNSOpenGLCurrentContext();
 
-    static GLContext *GetCurrentContext();
+    static QOpenGLContext *GetCurrentContext();
 
-    static void SetCurrentContext(GLContext *);
+    static void SetCurrentContext(QOpenGLContext *);
 
-    static GLContext *GetCurrentGLContext();
+//    static GLContext *GetCurrentGLContext();
 
-    static void SetCurrentGLContext(GLContext *);
+//    static void SetCurrentGLContext(GLContext *);
 
     // Member variables
     std::basic_string<char, std::char_traits<char>, std::allocator<char>> m_DebugName;
 //    std::map<uint32_t, GLContext::Context, std::less<uint32_t>, std::allocator<std::pair<const uint32_t, GLContext::Context>>> m_Contexts;
-//    GladGLContext  m_Context;
+    QOpenGLContext*  m_Context;
     GLDevice *m_Device;
     GLAbstractWindow *m_Window;
     bool m_Windowed;

@@ -32,8 +32,8 @@ add_library(lua-5.1 STATIC
     ${LUA_SRC_DIR}/ltable.c
     ${LUA_SRC_DIR}/ltablib.c
     ${LUA_SRC_DIR}/ltm.c
-    ${LUA_SRC_DIR}/lua.c
-    ${LUA_SRC_DIR}/luac.c
+#    ${LUA_SRC_DIR}/lua.c
+#    ${LUA_SRC_DIR}/luac.c
     ${LUA_SRC_DIR}/lundump.c
     ${LUA_SRC_DIR}/lvm.c
     ${LUA_SRC_DIR}/lzio.c

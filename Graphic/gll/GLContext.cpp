@@ -1,39 +1,39 @@
 #include "GLContext.h"
 #include "Graphic/gll/GLDevice.h"
 #include "Storm/Debug.h"
+#include "glad/glad.h"
 
-
-GLContext *GLContext::s_MainContext;
+QOpenGLContext *GLContext::s_MainContext;
 Blizzard::Thread::TLSSlot GLContext::s_CurrentContext;
-Blizzard::Thread::TLSSlot GLContext::s_CurrentGLContext;
+//Blizzard::Thread::TLSSlot GLContext::s_CurrentGLContext;
 int GLContext::s_DesktopMode;
 
 // https://github.com/bkaradzic/bgfx/blob/932302d8f460e514b933deba8c0e575a00f0bcd6/src/glcontext_wgl.cpp
 // https://github.com/CrossVR/dolphin/blob/90500ed90ee4d0fa7937442f8273314d15d33799/Source/Core/Common/GL/GLInterface/WGL.cpp
 // https://github.com/quyse/inanity/blob/415cc7f45dde03722161cf6bd1e13f5986507699/graphics/GlContext.cpp#L59
 
-GLContext *GLContext::GetNSOpenGLCurrentContext() {
+//QOpenGLContext *GLContext::GetNSOpenGLCurrentContext() {
+//    return s_MainContext;
+//}
+
+QOpenGLContext *GLContext::GetCurrentContext() {
     return s_MainContext;
 }
 
-GLContext *GLContext::GetCurrentContext() {
-    return s_MainContext;
-}
-
-void GLContext::SetCurrentContext(GLContext *context) {
+void GLContext::SetCurrentContext(QOpenGLContext *context) {
     s_MainContext = context;
 }
 
-GLContext *GLContext::GetCurrentGLContext() {
-    return s_MainContext;
-}
+//GLContext *GLContext::GetCurrentGLContext() {
+//    return s_MainContext;
+//}
 
-void GLContext::SetCurrentGLContext(GLContext *context) {
-    s_MainContext = context;
-}
+//void GLContext::SetCurrentGLContext(GLContext *context) {
+//    s_MainContext = context;
+//}
 
 GLContext::GLContext(GLDevice *a2, const char *a3) {
-//    this->m_Context = nullptr;
+    this->m_Context = nullptr;
     this->m_Window = nullptr;
     this->m_Windowed = false;
     this->m_MTGLEnabled = false;
@@ -76,59 +76,59 @@ int32_t GLContext::GetHeight() {
 }
 
 bool GLContext::IsCurrentContext() {
-    return GLContext::GetCurrentGLContext() == this;
+    return GLContext::GetCurrentContext() == this->m_Context;
 }
 
 void GLContext::MakeCurrent(bool a2) {
-//    BLIZZARD_ASSERT(this->m_Context != nullptr);
-//
-//    if (a2) {
-//        GLContext *v6 = GLContext::GetNSOpenGLCurrentContext();
-//        GLContext::SetCurrentContext(v6);
-//    }
-//
-//    if (this->m_Context != GLContext::GetCurrentContext()) {
-//        int32_t mtglEnabled = 0;
-//        GLDevice *device = GLDevice::Get();
-//        if (GLContext::GetCurrentContext() && device) {
-//            mtglEnabled = this->m_MTGLEnabled;
-//            glFlush();
-//        }
-////        this->m_Context->MakeCurrent(this->surface());
-////
-////        GLContext::SetCurrentContext(this->m_Context);
-//        GLContext::SetCurrentGLContext(this);
-//
-//
-//        if (device) {
-//            device->ApplyGLStates(device->m_States, 1);
-//            device->ApplyGLBindings(device->m_States, 1);
-//            device->m_DefaultVertexArrayObject.ApplyGLStates(device->m_DefaultVertexArrayObject.m_GLStates);
-//        }
-//    }
+    BLIZZARD_ASSERT(this->m_Context != nullptr);
+
+    if (a2) {
+        QOpenGLContext *v6 = GLContext::GetCurrentContext();
+        GLContext::SetCurrentContext(v6);
+    }
+
+    if (this->m_Context != GLContext::GetCurrentContext()) {
+        int32_t mtglEnabled = 0;
+        GLDevice *device = GLDevice::Get();
+        if (GLContext::GetCurrentContext() && device) {
+            mtglEnabled = this->m_MTGLEnabled;
+            glFlush();
+        }
+        this->m_Context->makeCurrent(this->m_Window);
+
+        //GLContext::SetCurrentContext(this->m_Context);
+        GLContext::SetCurrentContext(this->m_Context);
+
+
+        if (device) {
+            device->ApplyGLStates(device->m_States, 1);
+            device->ApplyGLBindings(device->m_States, 1);
+            device->m_DefaultVertexArrayObject.ApplyGLStates(device->m_DefaultVertexArrayObject.m_GLStates);
+        }
+    }
 }
 
 void GLContext::SetContextFormat(GLTextureFormat a2, uint32_t sampleCount) {
-//    QSurfaceFormat format;
-//    format.setRenderableType(QSurfaceFormat::OpenGL);
-//    format.setVersion(4, 5); // 设置 OpenGL 版本为 4.5
-//    format.setProfile(QSurfaceFormat::CoreProfile); // 核心模式
-//    format.setSamples(sampleCount); // 设置多重采样数
-//    format.setSwapBehavior(QSurfaceFormat::DoubleBuffer); // 双缓冲
+    QSurfaceFormat format;
+    format.setRenderableType(QSurfaceFormat::OpenGL);
+    format.setVersion(4, 5); // 设置 OpenGL 版本为 4.5
+    format.setProfile(QSurfaceFormat::CoreProfile); // 核心模式
+    format.setSamples(sampleCount); // 设置多重采样数
+    format.setSwapBehavior(QSurfaceFormat::DoubleBuffer); // 双缓冲
 
-//    setFormat(format);
+    m_Context->setFormat(format);
 
     if (this->m_Window) {
         this->m_Window->SetOpenGLContext(this);
     }
 
-//    if (this->m_Context != GLContext::GetCurrentContext()) {
-//        this->MakeCurrent(false);
-//    }
+    if (this->m_Context != GetCurrentContext()) {
+        this->MakeCurrent(false);
+    }
 }
 
 void GLContext::SetFullscreenMode(uint32_t, uint32_t, uint32_t, bool) {
-//    this->m_Window->showFullScreen();
+    this->m_Window->Show();
 }
 
 void GLContext::SetWindow(GLAbstractWindow *pWindow, bool show) {
@@ -158,7 +158,7 @@ void GLContext::SetWindow(GLAbstractWindow *pWindow, bool show) {
 }
 
 void GLContext::Swap() {
-//    swapBuffers(this->m_Window);
+    this->m_Context->swapBuffers(this->m_Window);
 }
 
 

@@ -3,14 +3,12 @@
 
 #include <cstdint>
 #include <windows.h>
-//#include <QOpenGLContext>
-//#include <QOpenGLWindow>
-//#include <QOpenGLFunctions>
+#include <QWindow>
 #include "NTempest/CRect.h"
 using namespace NTempest;
 class GLContext;
 
-class GLAbstractWindow  {//: public QOpenGLWindow
+class GLAbstractWindow: public QWindow  {//
 public:
     // Virtual member functions
     virtual int32_t GetWidth(void)= 0;

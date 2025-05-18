@@ -4,8 +4,8 @@
 #include "Storm/Debug.h"
 #include <cmath>
 //#include <QOpenGLWindow>
-//#include <QScreen>
-//#include <QDebug>
+#include <QSurfaceFormat>
+#include <QDebug>
 
 
 GLWindowCallbacks DefaultCallbacks = {
@@ -19,12 +19,12 @@ bool GLWindow::CanEnterFullscreenMode() {
 
 void GLWindow::EnterFullscreenMode() {
     m_FullscreenWindow = this;
-   // this->showFullScreen();
+    this->showFullScreen();
 }
 
 void GLWindow::ExitFullscreenMode() {
     if (m_FullscreenWindow) {
-      //  this->showNormal();
+        this->showNormal();
         m_FullscreenWindow = nullptr;
     }
 }
@@ -72,29 +72,29 @@ void GLWindow::SetCallbacks(GLWindowCallbacks *callbacks) {
 }
 
 void GLWindow::SetOpenGLContext(GLContext *context) {
-//    setSurfaceType(OpenGLSurface);
-//
-//    QSurfaceFormat fmt;
-//    fmt.setMajorVersion(4);
-//    fmt.setMinorVersion(2);
-//    fmt.setProfile(QSurfaceFormat::CoreProfile); //whatever this is
-//
-//    this->setFormat(fmt);
-//
-//    m_Context = context;
-//    m_Context->setFormat(fmt);
-//
-//    m_Context->create();
-//
-//    if (!m_Context->isValid()) {
-//        qCritical() << "The OpenGL context is invalid!"; //I allways get this message
-//    }
-////now another test:
-////the next line prints: "Window format version is: 4.2" which is correct
-//    qDebug() << "Window format version is: " << this->format().majorVersion() << "." << this->format().minorVersion();
-////the next line prints: "Context format version is: 2.0" Which is ofcourse not correct! WTF?
-//    qDebug() << "Context format version is: " << m_Context->format().majorVersion() << "."
-//             << m_Context->format().minorVersion();
+    setSurfaceType(OpenGLSurface);
+
+    QSurfaceFormat fmt;
+    fmt.setMajorVersion(4);
+    fmt.setMinorVersion(2);
+    fmt.setProfile(QSurfaceFormat::CoreProfile); //whatever this is
+
+    this->setFormat(fmt);
+
+    m_Context = context;
+    m_Context->setFormat(fmt);
+
+    m_Context->create();
+
+    if (!m_Context->isValid()) {
+        qCritical() << "The OpenGL context is invalid!"; //I allways get this message
+    }
+//now another test:
+//the next line prints: "Window format version is: 4.2" which is correct
+    qDebug() << "Window format version is: " << this->format().majorVersion() << "." << this->format().minorVersion();
+//the next line prints: "Context format version is: 2.0" Which is ofcourse not correct! WTF?
+    qDebug() << "Context format version is: " << m_Context->format().majorVersion() << "."
+             << m_Context->format().minorVersion();
 }
 
 int32_t GLWindow::GetWidth(void) {
